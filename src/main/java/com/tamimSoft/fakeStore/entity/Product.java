@@ -1,18 +1,17 @@
 package com.tamimSoft.fakeStore.entity;
 
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.*;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
 @Document("products")
 public class Product {
     @Id
-    private Object id;
+    private ObjectId id;
     @NonNull
     private String name;
     @NonNull
@@ -26,9 +25,9 @@ public class Product {
     private String imageUrl;
 
     @DBRef
-    private Object categoryId;
+    private ObjectId categoryId;
     @DBRef
-    private Object brandId;
+    private ObjectId brandId;
     @DBRef
-    private Object userId;
+    private ObjectId userId;
 }

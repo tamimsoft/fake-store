@@ -1,8 +1,8 @@
 package com.tamimSoft.fakeStore.entity;
 
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+import com.mongodb.lang.Nullable;
+import lombok.*;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -10,21 +10,23 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
 @Document("users")
 public class User {
     @Id
-    private Object id;
+    private ObjectId id;
     @NonNull
     @Indexed(unique = true)
     private String userName;
     @NonNull
     private String password;
+    @Nullable
     private String email;
+    @Nullable
     private String phone;
     private List<String> roles;
+    @Nullable
     private String token;
-    private LocalDateTime lastLogin;
     private LocalDateTime createdAt;
 }

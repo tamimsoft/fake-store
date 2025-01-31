@@ -2,6 +2,7 @@ package com.tamimSoft.fakeStore.service;
 
 import com.tamimSoft.fakeStore.entity.Product;
 import com.tamimSoft.fakeStore.repository.ProductRepository;
+import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,13 +23,13 @@ public class ProductService {
     public Product saveProduct(Product product) {
         return productRepository.save(product);
     }
-    public Product findProductById(Object id) {
+    public Product findProductById(ObjectId id) {
         return productRepository.findProductById(id);
     }
     public Product findProductByName(String name) {
         return productRepository.findProductByName(name);
     }
-    public List<Product> findProductByUserId(Object userId) {
+    public List<Product> findProductByUserId(ObjectId userId) {
         return productRepository.findAllByUserId(userId);
     }
 }
