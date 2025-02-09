@@ -1,12 +1,9 @@
 package com.tamimSoft.fakeStore.repository;
 
-import com.tamimSoft.fakeStore.entity.Brand;
 import com.tamimSoft.fakeStore.entity.Category;
-import lombok.NonNull;
-import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface CategoryRepository extends MongoRepository<Category, ObjectId> {
+public interface CategoryRepository extends MongoRepository<Category, String> {
 
     Category findCategoryByName(String name);
 

@@ -1,10 +1,10 @@
 package com.tamimSoft.fakeStore.controller;
 
-import com.tamimSoft.fakeStore.entity.Category;
-import com.tamimSoft.fakeStore.service.CategoryService;
+import com.tamimSoft.fakeStore.entity.Product;
+import com.tamimSoft.fakeStore.service.ProductService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
@@ -14,27 +14,25 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@Slf4j
-@RequestMapping("/categories")
+@RequestMapping("/products")
 @RequiredArgsConstructor
 @Tag(name = "Public APIs")
-public class CategoryController {
-
-    private final CategoryService categoryService;
+public class ProductController {
+    private final ProductService productService;
 
     @GetMapping()
-    public ResponseEntity<Page<Category>> getAllCategories(
+    @Operation(summary = "Get all products", description = "Allows admin to create a new brand.")
+    public ResponseEntity<Page<Product>> getAllProducts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        Page<Category> categories = categoryService.findAllCategories(PageRequest.of(page, size));
-        return ResponseEntity.ok(categories);
+        Page<Product> products = productService.findAllProducts(PageRequest.of(page, size));
+        return ResponseEntity.ok(products);
     }
 
     @GetMapping("/id")
-    public ResponseEntity<Category> getCategoryById(@RequestParam String categoryId
-    ) {
-        Category category = categoryService.findCategoryById(categoryId);
-        return ResponseEntity.ok(category);
+    public ResponseEntity<Product> getProductById(@RequestParam String productId) {
+        Product product = productService.findProductById(productId);
+        return ResponseEntity.ok(product);
     }
 }

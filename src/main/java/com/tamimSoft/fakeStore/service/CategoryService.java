@@ -1,46 +1,60 @@
 package com.tamimSoft.fakeStore.service;
 
-import com.tamimSoft.fakeStore.entity.Brand;
 import com.tamimSoft.fakeStore.entity.Category;
+import com.tamimSoft.fakeStore.exception.ResourceNotFoundException;
 import com.tamimSoft.fakeStore.repository.CategoryRepository;
-import org.bson.types.ObjectId;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
+@RequiredArgsConstructor
 public class CategoryService {
     private final CategoryRepository categoryRepository;
 
-    public CategoryService(CategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
+    /**
+     * Save a new category. to the database.
+     *
+     * @param category The category to be saved.
+     * @return The saved category.
+     */
+    public Category saveCategory(Category category) {
+        return categoryRepository.save(category);
     }
 
-    public void deleteCategoryByName(String name) {
-        categoryRepository.deleteCategoryByName(name);
+    /**
+     * Retrieves all categories from the database.
+     *
+     * @param pageable The pageable object for pagination.
+     * @return A page of categories.
+     */
+    public Page<Category> findAllCategories(Pageable pageable) {
+        return categoryRepository.findAll(pageable);
     }
 
-    public void deleteCategoryById(ObjectId id) {
-        categoryRepository.deleteById(id);
-    }
-
-    public List<Category> findAllCategories() {
-        return categoryRepository.findAll();
-    }
-
-    public void saveCategory(Category category) {
-        try {
-            categoryRepository.save(category);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+    /**
+     * Deletes a category by its ID.
+     *
+     * @param categoryId The ID of the category to be deleted.
+     * @throws ResourceNotFoundException If the category is not found.
+     */
+    public void deleteById(String categoryId) {
+        if (!categoryRepository.existsById(categoryId)) {
+            throw new ResourceNotFoundException("Category not found with id: " + categoryId);
         }
+        categoryRepository.deleteById(categoryId);
     }
 
-    public void deleteById(ObjectId categoryId) {
-        try {
-            categoryRepository.deleteById(categoryId);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    /**
+     * Finds a category by its ID.
+     *
+     * @param categoryId The ID of the category to find.
+     * @return The found category.
+     * @throws ResourceNotFoundException If the category is not found.
+     */
+    public Category findCategoryById(String categoryId) {
+        return categoryRepository.findById(categoryId).orElseThrow(() ->
+                new ResourceNotFoundException("Category not found with id: " + categoryId));
     }
 }
