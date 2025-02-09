@@ -31,6 +31,7 @@ public class ProductController {
     }
 
     @GetMapping("/id")
+    @Operation(summary = "Get a product by ID", description = "Retrieve a product by its unique ID.")
     public ResponseEntity<Product> getProductById(@RequestParam String productId) {
         Product product = productService.findProductById(productId);
         return ResponseEntity.ok(product);

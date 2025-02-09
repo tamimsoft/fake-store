@@ -3,6 +3,7 @@ package com.tamimSoft.fakeStore.controller.user;
 import com.tamimSoft.fakeStore.dto.UserDTO;
 import com.tamimSoft.fakeStore.entity.User;
 import com.tamimSoft.fakeStore.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,13 +26,15 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping
+    @GetMapping()
+    @Operation(summary = "Get user details", description = "Retrieve user details such as first name, last name, email, and phone number.")
     public ResponseEntity<User> getUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return ResponseEntity.ok(userService.findByUserName(authentication.getName()));
     }
 
-    @PatchMapping
+    @PatchMapping()
+    @Operation(summary = "Update user details", description = "Update user details such as first name, last name, password, email, and phone number.")
     public ResponseEntity<User> updateUser(UserDTO userDTO) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findByUserName(authentication.getName());

@@ -2,6 +2,7 @@ package com.tamimSoft.fakeStore.controller;
 
 import com.tamimSoft.fakeStore.entity.Brand;
 import com.tamimSoft.fakeStore.service.BrandService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,7 @@ public class BrandController {
     private final BrandService brandService;
 
     @GetMapping()
+    @Operation(summary = "Get all brands", description = "Retrieve a list of all brands.")
     public ResponseEntity<Page<Brand>> getAllBrands(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
@@ -32,6 +34,7 @@ public class BrandController {
     }
 
     @GetMapping("/id")
+    @Operation(summary = "Get a brand by ID", description = "Retrieve a brand by its unique ID.")
     public ResponseEntity<Brand> getBrandById(@RequestParam String brandId) {
         Brand brand = brandService.findBrandById(brandId);
         return ResponseEntity.ok(brand);

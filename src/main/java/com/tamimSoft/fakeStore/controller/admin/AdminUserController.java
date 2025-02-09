@@ -46,7 +46,7 @@ public class AdminUserController {
     }
 
     @PatchMapping("/update")
-    @Operation(summary = "Update a user", description = "Update details of an existing user.")
+    @Operation(summary = "Update a user with new roles", description = "Update details of an existing user.")
     public ResponseEntity<User> updateUser(
             @RequestParam String userName,
             @RequestBody UserDTO userDTO

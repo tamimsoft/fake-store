@@ -11,6 +11,7 @@ import com.tamimSoft.fakeStore.service.RefreshTokenService;
 import com.tamimSoft.fakeStore.service.UserDetailsServiceImpl;
 import com.tamimSoft.fakeStore.service.UserService;
 import com.tamimSoft.fakeStore.utils.JwtUtil;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +41,7 @@ public class AuthController {
     private final Map<String, User> pendingUsers = new HashMap<>();
 
     @PostMapping("/signup")
+    @Operation(summary = "Sign up a new user", description = "Allows users to sign up for an account.")
     public ResponseEntity<?> userSignUp(@RequestBody SignUpDTO userDTO) {
         User existUser = userService.findByUserName(userDTO.getUserName());
         if (existUser != null) {
@@ -67,6 +69,7 @@ public class AuthController {
     }
 
     @PostMapping("/validate-otp")
+    @Operation(summary = "Validate OTP", description = "Validates the OTP sent to the user's email.")
     public ResponseEntity<?> validateOTP(@RequestParam String email, @RequestParam String otp) {
         User pendingUser = pendingUsers.get(email);
         if (pendingUser == null) {
@@ -86,6 +89,7 @@ public class AuthController {
 
 
     @PostMapping("/login")
+    @Operation(summary = "User login", description = "Allows users to log in to their account.")
     public ResponseEntity<Map<String, String>> userLogin(@RequestBody LoginDTO userDTO) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDTO.getUserName(), userDTO.getPassword()));
         UserDetails userDetails = userDetailsService.loadUserByUsername(userDTO.getUserName());
@@ -102,6 +106,7 @@ public class AuthController {
     }
 
     @PostMapping("/refresh-token")
+    @Operation(summary = "Refresh access token", description = "Refreshes the access token using the refresh token.")
     public ResponseEntity<?> refreshAccessToken(@RequestBody Map<String, String> request) {
         String refreshToken = request.get("refreshToken");
 
