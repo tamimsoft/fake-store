@@ -44,7 +44,7 @@ public class AdminBrandController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedBrand);
     }
 
-    @DeleteMapping("/id")
+    @DeleteMapping()
     @Operation(summary = "Delete a brand", description = "Allows admin to delete a brand.")
     public ResponseEntity<?> deleteBrand(@RequestParam String brandId) {
         brandService.deleteById(brandId);
