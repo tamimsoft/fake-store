@@ -65,7 +65,7 @@ public class AdminProductController {
         return product;
     }
 
-    @DeleteMapping("/id")
+    @DeleteMapping()
     @Operation(summary = "Delete a product", description = "Removes a product by its ID.")
     public ResponseEntity<?> deleteProduct(@RequestParam String productId) {
         productService.deleteById(productId);
