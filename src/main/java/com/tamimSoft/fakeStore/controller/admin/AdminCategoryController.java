@@ -33,7 +33,7 @@ public class AdminCategoryController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedCategory);
     }
 
-    @DeleteMapping("/id")
+    @DeleteMapping()
     @Operation(summary = "Delete a category", description = "Allows admin to delete a category.")
     public ResponseEntity<?> deleteCategory(@RequestParam String categoryId) {
         categoryService.deleteById(categoryId);
