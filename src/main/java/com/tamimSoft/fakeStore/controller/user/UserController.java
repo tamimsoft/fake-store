@@ -11,10 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Slf4j
@@ -45,5 +42,12 @@ public class UserController {
         user.setEmail(userDTO.getEmail());
         user.setPhone(userDTO.getPhone());
         return ResponseEntity.ok(userService.updateUser(user));
+    }
+    @DeleteMapping()
+    @Operation(summary = "Delete user", description = "Delete user by username.")
+    public ResponseEntity<?> deleteUser( ) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        userService.deleteByUserName(authentication.getName());
+        return ResponseEntity.ok().build();
     }
 }
