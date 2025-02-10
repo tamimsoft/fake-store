@@ -1,7 +1,6 @@
 package com.tamimSoft.fakeStore.service;
 
 import com.tamimSoft.fakeStore.entity.User;
-import com.tamimSoft.fakeStore.exception.ResourceNotFoundException;
 import com.tamimSoft.fakeStore.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -27,7 +26,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                     .roles(user.getRoles().toArray(new String[0]))
                     .build();
         }
-//        throw new UsernameNotFoundException("User not found");
-        throw new ResourceNotFoundException("User not found");
+        throw new UsernameNotFoundException("User not found");
     }
 }

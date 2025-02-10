@@ -1,11 +1,11 @@
 package com.tamimSoft.fakeStore.config;
 
 import com.tamimSoft.fakeStore.filter.JwtFilter;
-import com.tamimSoft.fakeStore.security.CustomAccessDeniedHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -38,17 +38,13 @@ public class SecurityConfig {
                         .requestMatchers("/admin/**").hasRole("ADMIN") // Admin-related requests require ADMIN role
                         .requestMatchers("/user/**").hasRole("USER") // User-related requests require USER role
                         .anyRequest().permitAll()) // Other requests are allowed without authentication
-
-                // Configure exception handling for access denied
-                .exceptionHandling(exception -> exception
-                        .accessDeniedHandler(new CustomAccessDeniedHandler()) // Custom exception handler
-                )
                 // Configure session management to be stateless
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // Add JWT filter before the UsernamePasswordAuthenticationFilter
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-                // Disable CSRF protection
-                .csrf(AbstractHttpConfigurer::disable).build();
+                .cors(Customizer.withDefaults()) // Enable CORS
+                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF protection
+                .build();
     }
 
 
