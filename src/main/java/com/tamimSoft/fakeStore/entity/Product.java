@@ -12,6 +12,8 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -27,16 +29,24 @@ public class Product {
     private String description;
     private double price;
     private double discount;
-    private String color;
-    private String size;
+    @NonNull
+    private Set<String> colors;
+
+
+    private Set<String> sizes = new HashSet<>();
+    @NonNull
     private String material;
+    @NonNull
     private Integer stock = 1;
-    private String imageUrl;
+    @NonNull
+    private Set<String> imageUrls;
 
     @DBRef
+    @NonNull
     private Brand brand;
 
     @DBRef
+    @NonNull
     private Category category;
 
     @CreatedDate

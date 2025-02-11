@@ -5,6 +5,7 @@ import com.tamimSoft.fakeStore.entity.Brand;
 import com.tamimSoft.fakeStore.entity.Category;
 import com.tamimSoft.fakeStore.entity.Product;
 import com.tamimSoft.fakeStore.entity.User;
+import com.tamimSoft.fakeStore.response.ApiResponse;
 import com.tamimSoft.fakeStore.service.BrandService;
 import com.tamimSoft.fakeStore.service.CategoryService;
 import com.tamimSoft.fakeStore.service.ProductService;
@@ -20,7 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/adimin/product")
+@RequestMapping("/admin/product")
 @PreAuthorize("hasRole('ADMIN')")
 @RequiredArgsConstructor
 @Tag(name = "Admin APIs", description = "Admin-only operations")
@@ -32,7 +33,7 @@ public class AdminProductController {
 
     @PostMapping()
     @Operation(summary = "Create a product", description = "Allows admin to create a new product.")
-    public ResponseEntity<?> createProduct(@RequestBody ProductDTO productDTO) {
+    public ResponseEntity<ApiResponse<Product>> createProduct(@RequestBody ProductDTO productDTO) {
 
         Brand brand = brandService.findBrandById(productDTO.getBrandId());
         Category category = categoryService.findCategoryById(productDTO.getCategoryId());
@@ -46,7 +47,8 @@ public class AdminProductController {
         user.getProducts().add(savedProduct);
         userService.updateUser(user);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new ApiResponse<>(HttpStatus.CREATED, "Product created successfully", savedProduct));
     }
 
     private static Product getProduct(ProductDTO productDTO, Brand brand, Category category) {
@@ -55,10 +57,10 @@ public class AdminProductController {
         product.setDescription(productDTO.getDescription());
         product.setPrice(productDTO.getPrice());
         product.setDiscount(productDTO.getDiscount());
-        product.setColor(productDTO.getColor());
-        product.setSize(productDTO.getSize());
+        product.setColors(productDTO.getColors());
+        product.setSizes(productDTO.getSizes());
         product.setMaterial(productDTO.getMaterial());
-        product.setImageUrl(productDTO.getImageUrl());
+        product.setImageUrls(productDTO.getImageUrls());
         product.setStock(productDTO.getStock());
         product.setBrand(brand);
         product.setCategory(category);

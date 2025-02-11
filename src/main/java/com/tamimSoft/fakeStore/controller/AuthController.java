@@ -6,6 +6,7 @@ import com.tamimSoft.fakeStore.entity.RefreshToken;
 import com.tamimSoft.fakeStore.entity.User;
 import com.tamimSoft.fakeStore.exception.InvalidOTPException;
 import com.tamimSoft.fakeStore.exception.ResourceNotFoundException;
+import com.tamimSoft.fakeStore.response.ApiResponse;
 import com.tamimSoft.fakeStore.service.OTPService;
 import com.tamimSoft.fakeStore.service.RefreshTokenService;
 import com.tamimSoft.fakeStore.service.UserDetailsServiceImpl;
@@ -14,6 +15,7 @@ import com.tamimSoft.fakeStore.utils.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -90,7 +92,7 @@ public class AuthController {
 
     @PostMapping("/login")
     @Operation(summary = "User login", description = "Allows users to log in to their account.")
-    public ResponseEntity<Map<String, String>> userLogin(@RequestBody LoginDTO userDTO) {
+    public ResponseEntity<ApiResponse<Map<String, String>>> userLogin(@RequestBody LoginDTO userDTO) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDTO.getUserName(), userDTO.getPassword()));
         UserDetails userDetails = userDetailsService.loadUserByUsername(userDTO.getUserName());
 
@@ -101,13 +103,13 @@ public class AuthController {
         tokens.put("accessToken", accessToken);
         tokens.put("refreshToken", refreshToken.getToken());
 
-        return ResponseEntity.ok(tokens);
+        return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Login Successful", tokens));
 
     }
 
     @PostMapping("/refresh-token")
     @Operation(summary = "Refresh access token", description = "Refreshes the access token using the refresh token.")
-    public ResponseEntity<?> refreshAccessToken(@RequestBody Map<String, String> request) {
+    public ResponseEntity<ApiResponse<Map<String, String>>> refreshAccessToken(@RequestBody Map<String, String> request) {
         String refreshToken = request.get("refreshToken");
 
         RefreshToken verifiedToken = refreshTokenService.verifyRefreshToken(refreshToken);
@@ -123,6 +125,6 @@ public class AuthController {
         tokens.put("accessToken", newAccessToken);
         tokens.put("refreshToken", newRefreshToken.getToken());
 
-        return ResponseEntity.ok(tokens);
+        return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Access token refreshed", tokens));
     }
 }

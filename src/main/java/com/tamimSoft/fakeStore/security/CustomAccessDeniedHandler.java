@@ -1,7 +1,7 @@
 package com.tamimSoft.fakeStore.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tamimSoft.fakeStore.dto.ErrorResponse;
+import com.tamimSoft.fakeStore.response.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
@@ -19,9 +19,9 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
         response.setStatus(HttpStatus.FORBIDDEN.value());
         response.setContentType("application/json");
 
-        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.FORBIDDEN.toString(), message);
+        ApiResponse<?> apiResponse = new ApiResponse<>(HttpStatus.FORBIDDEN, message, null);
         // Convert map to JSON and write response
         ObjectMapper objectMapper = new ObjectMapper();
-        response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
+        response.getWriter().write(objectMapper.writeValueAsString(apiResponse));
     }
 }

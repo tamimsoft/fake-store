@@ -2,12 +2,14 @@ package com.tamimSoft.fakeStore.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tamimSoft.fakeStore.exception.InvalidTokenException;
+import com.tamimSoft.fakeStore.response.ApiResponse;
 import com.tamimSoft.fakeStore.service.UserDetailsServiceImpl;
 import com.tamimSoft.fakeStore.utils.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,8 +21,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -32,7 +32,7 @@ public class JwtFilter extends OncePerRequestFilter {
     private static final String BEARER_PREFIX = "Bearer ";
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
         try {
             String jwtToken = extractJwtToken(request);
 
@@ -77,12 +77,6 @@ public class JwtFilter extends OncePerRequestFilter {
     private void sendErrorResponse(HttpServletResponse response, String message) throws IOException {
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType("application/json");
-
-        Map<String, String> errorResponse = new HashMap<>();
-        errorResponse.put("message", message);
-        errorResponse.put("status", HttpStatus.UNAUTHORIZED.toString());
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
+        new ObjectMapper().writeValue(response.getWriter(), new ApiResponse<>(HttpStatus.UNAUTHORIZED, message, null));
     }
 }

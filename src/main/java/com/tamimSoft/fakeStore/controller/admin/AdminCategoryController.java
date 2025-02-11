@@ -2,6 +2,7 @@ package com.tamimSoft.fakeStore.controller.admin;
 
 import com.tamimSoft.fakeStore.dto.CategoryDTO;
 import com.tamimSoft.fakeStore.entity.Category;
+import com.tamimSoft.fakeStore.response.ApiResponse;
 import com.tamimSoft.fakeStore.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,13 +25,16 @@ public class AdminCategoryController {
 
     @PostMapping()
     @Operation(summary = "Create a category", description = "Allows admin to create a new category.")
-    public ResponseEntity<Category> createCategory(@RequestBody CategoryDTO categoryDTO) {
+    public ResponseEntity<ApiResponse<Category>> createCategory(@RequestBody CategoryDTO categoryDTO) {
         Category category = new Category();
         category.setName(categoryDTO.getName());
         category.setDescription(categoryDTO.getDescription());
         category.setImageUrl(categoryDTO.getImageUrl());
         Category savedCategory = categoryService.saveCategory(category);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedCategory);
+        log.info("Category created successfully: {}", savedCategory);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new ApiResponse<>(HttpStatus.CREATED, "Category created successfully", savedCategory));
     }
 
     @DeleteMapping()

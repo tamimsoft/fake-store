@@ -3,7 +3,7 @@ package com.tamimSoft.fakeStore.controller.admin;
 import com.tamimSoft.fakeStore.dto.BrandDTO;
 import com.tamimSoft.fakeStore.entity.Brand;
 import com.tamimSoft.fakeStore.entity.Category;
-import com.tamimSoft.fakeStore.exception.ResourceNotFoundException;
+import com.tamimSoft.fakeStore.response.ApiResponse;
 import com.tamimSoft.fakeStore.service.BrandService;
 import com.tamimSoft.fakeStore.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,7 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -30,19 +32,35 @@ public class AdminBrandController {
 
     @PostMapping()
     @Operation(summary = "Create a brand", description = "Allows admin to create a new brand.")
-    public ResponseEntity<Brand> createBrand(@RequestBody BrandDTO brandDTO) {
-        Category category = categoryService.findCategoryById(brandDTO.getCategoryId());
-        if (category == null) {
-            throw new ResourceNotFoundException("Category not found with id: " + brandDTO.getCategoryId());
+
+    public ResponseEntity<ApiResponse<Brand>> createBrand(@RequestBody BrandDTO brandDTO) {
+        if (brandDTO.getCategoryIds() == null || brandDTO.getCategoryIds().isEmpty()) {
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse<>(HttpStatus.BAD_REQUEST, "Category IDs cannot be empty", null));
         }
+
+        Set<Category> categories = brandDTO.getCategoryIds().stream()
+                .map(categoryService::findCategoryById)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+
+        if (categories.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ApiResponse<>(HttpStatus.NOT_FOUND, "Category not found with IDs: " + brandDTO.getCategoryIds(), null));
+        }
+
         Brand brand = new Brand();
         brand.setName(brandDTO.getName());
         brand.setDescription(brandDTO.getDescription());
         brand.setImageUrl(brandDTO.getImageUrl());
-        brand.setCategory(Set.of(category));
+        brand.setCategory(categories);
+
         Brand savedBrand = brandService.saveBrand(brand);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedBrand);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new ApiResponse<>(HttpStatus.CREATED, "Brand created successfully", savedBrand));
     }
+
 
     @DeleteMapping()
     @Operation(summary = "Delete a brand", description = "Allows admin to delete a brand.")

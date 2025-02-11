@@ -27,11 +27,13 @@ public class Brand {
     @NonNull
     @Indexed(unique = true)
     private String name;
+
     private String description;
     private String imageUrl;
 
 
     @DBRef
+    @NonNull
     private Set<Category> category = new HashSet<>();
 
     @CreatedDate
