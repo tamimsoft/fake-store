@@ -90,11 +90,14 @@ public class AuthController {
     }
 
 
-    @PostMapping("/login")
+    @GetMapping("/login")
     @Operation(summary = "User login", description = "Allows users to log in to their account.")
-    public ResponseEntity<ApiResponse<Map<String, String>>> userLogin(@RequestBody LoginDTO userDTO) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDTO.getUserName(), userDTO.getPassword()));
-        UserDetails userDetails = userDetailsService.loadUserByUsername(userDTO.getUserName());
+    public ResponseEntity<ApiResponse<Map<String, String>>> userLogin(
+            @RequestParam String userName,
+            @RequestParam String password
+    ) {
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userName, password));
+        UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
 
         String accessToken = jwtUtil.generateToken(userDetails.getUsername());
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getUsername());
