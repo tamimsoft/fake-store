@@ -1,6 +1,6 @@
 package com.tamimSoft.fakeStore.entity;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,7 +20,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document("users")
-@Schema(hidden = true)
+@Hidden
 public class User {
     @Id
     private String id;
@@ -44,6 +44,10 @@ public class User {
 
     @DBRef
     private Set<Product> products = new HashSet<>();
+    @DBRef
+    private Set<Cart> carts = new HashSet<>();
+    @DBRef
+    private Set<Product> favourites = new HashSet<>();
 
     @CreatedDate
     private LocalDateTime createdAt;

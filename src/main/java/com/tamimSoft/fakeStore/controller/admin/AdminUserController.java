@@ -1,8 +1,6 @@
 package com.tamimSoft.fakeStore.controller.admin;
 
 import com.tamimSoft.fakeStore.dto.UserDTO;
-import com.tamimSoft.fakeStore.entity.User;
-import com.tamimSoft.fakeStore.exception.ResourceNotFoundException;
 import com.tamimSoft.fakeStore.response.ApiResponse;
 import com.tamimSoft.fakeStore.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,42 +26,32 @@ public class AdminUserController {
 
     @GetMapping("/all-users")
     @Operation(summary = "Get all users", description = "Retrieve a list of all users.")
-    public ResponseEntity<ApiResponse<Page<User>>> getAllUsers(
+    public ResponseEntity<ApiResponse<Page<UserDTO>>> getAllUsers(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        Page<User> users = userService.findAllUsers(PageRequest.of(page, size));
-        return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Users retrieved successfully", users));
+        Page<UserDTO> userDTOPage = userService.getAllUserDTOs(PageRequest.of(page, size));
+        return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Users retrieved successfully", userDTOPage));
     }
 
     @GetMapping("/all-users-by-role")
     @Operation(summary = "Get all users", description = "Fetches all users by an specific role.")
-    public ResponseEntity<ApiResponse<Page<User>>> getAllUsersByRole(
+    public ResponseEntity<ApiResponse<Page<UserDTO>>> getAllUsersByRole(
             @RequestParam String role,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        Page<User> allUsersByRole = userService.findAllUsersByRole(role, PageRequest.of(page, size));
+        Page<UserDTO> allUsersByRole = userService.getAllUserDTOsByRole(role, PageRequest.of(page, size));
         return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Users retrieved successfully", allUsersByRole));
     }
 
     @PatchMapping("/update")
-    @Operation(summary = "Update a user with new roles", description = "Update details of an existing user.")
-    public ResponseEntity<ApiResponse<User>> updateUser(
+    @Operation(summary = "Update a customer with new roles", description = "Update details of an existing customer.")
+    public ResponseEntity<ApiResponse<Void>> updateUser(
             @RequestParam String userName,
             @RequestBody UserDTO userDTO
     ) {
-        User user = userService.findByUserName(userName);
-        if (user == null) {
-            throw new ResourceNotFoundException("User not found with user name: " + userName);
-        }
-        user.setFirstName(userDTO.getFirstName() == null ? user.getFirstName() : userDTO.getFirstName());
-        user.setLastName(userDTO.getLastName() == null ? user.getLastName() : userDTO.getLastName());
-        user.setPassword(userDTO.getPassword() == null ? user.getPassword() : userDTO.getPassword());
-        user.setEmail(userDTO.getEmail() == null ? user.getEmail() : userDTO.getEmail());
-        user.setPhone(userDTO.getPhone() == null ? user.getPhone() : userDTO.getPhone());
-        user.getRoles().addAll(userDTO.getRoles() == null ? user.getRoles() : userDTO.getRoles());
-        userService.updateUser(user);
-        return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "User details updated successfully", user));
+        userService.updateUserInfoWithRole(userDTO, userName);
+        return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "User details updated successfully", null));
     }
 }

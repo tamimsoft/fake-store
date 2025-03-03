@@ -1,6 +1,6 @@
 package com.tamimSoft.fakeStore.entity;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,19 +19,20 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document("products")
-@Schema(hidden = true)
+@Hidden
 public class Product {
     @Id
     private String id;
     @NonNull
     private String name;
     @NonNull
+    private String slug;
+    @NonNull
     private String description;
     private double price;
     private double discount;
     @NonNull
     private Set<String> colors;
-
 
     private Set<String> sizes = new HashSet<>();
     @NonNull
@@ -48,6 +49,10 @@ public class Product {
     @DBRef
     @NonNull
     private Category category;
+
+    @DBRef
+    @NonNull
+    private Set<ProductTag> tags;
 
     @CreatedDate
     private LocalDateTime createdAt;

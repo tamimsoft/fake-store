@@ -54,7 +54,7 @@ public class GlobalExceptionHandler {
 
     // Helper method to build error responses
     private ResponseEntity<ApiResponse<?>> buildErrorResponse(HttpStatus status, String message) {
-        ApiResponse<?> apiResponse = new ApiResponse<>(status, message,null);
+        ApiResponse<?> apiResponse = new ApiResponse<>(status, message, null);
         return ResponseEntity.status(status).body(apiResponse);
     }
 }

@@ -16,7 +16,6 @@ public class FakeStoreApp {
         SpringApplication.run(FakeStoreApp.class, args);
     }
 
-
     @Bean
     public RestTemplate restTemplate() {
         return new RestTemplate();

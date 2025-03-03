@@ -36,7 +36,7 @@ public class SecurityConfig {
         // Configure request authorization rules
         return http.authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/admin/**").hasRole("ADMIN") // Admin-related requests require ADMIN role
-                        .requestMatchers("/user/**").hasRole("USER") // User-related requests require USER role
+                        .requestMatchers("/customer/**").hasRole("CUSTOMER") // Customer-related requests require CUSTOMER role
                         .anyRequest().permitAll()) // Other requests are allowed without authentication
                 // Configure session management to be stateless
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -67,10 +67,10 @@ public class SecurityConfig {
     /**
      * Configures and returns a password encoder instance.
      * This method is annotated with @Bean, indicating that the returned object will be registered as a bean in the Spring application context.
-     * BCryptPasswordEncoder is chosen as the password encoder due to its robustness in securely handling user passwords.
+     * BCryptPasswordEncoder is chosen as the password encoder due to its robustness in securely handling customer passwords.
      * BCrypt is a strong hashing function suitable for securely storing passwords.
      *
-     * @return An instance of PasswordEncoder, used for encoding and comparing user passwords.
+     * @return An instance of PasswordEncoder, used for encoding and comparing customer passwords.
      */
     @Bean
     public PasswordEncoder passwordEncoder() {

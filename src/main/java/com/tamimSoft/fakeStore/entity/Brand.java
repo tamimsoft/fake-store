@@ -1,6 +1,6 @@
 package com.tamimSoft.fakeStore.entity;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,7 +20,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document("brands")
-@Schema(hidden = true)
+@Hidden
 public class Brand {
     @Id
     private String id;
@@ -30,7 +30,6 @@ public class Brand {
 
     private String description;
     private String imageUrl;
-
 
     @DBRef
     @NonNull

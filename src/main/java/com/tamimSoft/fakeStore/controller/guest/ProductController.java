@@ -1,6 +1,6 @@
-package com.tamimSoft.fakeStore.controller;
+package com.tamimSoft.fakeStore.controller.guest;
 
-import com.tamimSoft.fakeStore.entity.Product;
+import com.tamimSoft.fakeStore.dto.ProductDTO;
 import com.tamimSoft.fakeStore.response.ApiResponse;
 import com.tamimSoft.fakeStore.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Set;
+
 @RestController
 @RequestMapping("/products")
 @RequiredArgsConstructor
@@ -24,18 +26,22 @@ public class ProductController {
 
     @GetMapping()
     @Operation(summary = "Get all products", description = "Allows admin to create a new brand.")
-    public ResponseEntity<ApiResponse<Page<Product>>> getAllProducts(
+    public ResponseEntity<ApiResponse<Page<ProductDTO>>> getAllProducts(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String categoryId,
+            @RequestParam(required = false) String brandId,
+            @RequestParam(required = false) Set<String> tagIds
     ) {
-        Page<Product> products = productService.findAllProducts(PageRequest.of(page, size));
-        return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Products retrieved successfully", products));
+        Page<ProductDTO> productDTOPage = productService.getAllProductDTOs(PageRequest.of(page, size), categoryId, brandId, tagIds);
+//        Page<ProductDTO> productDTOPage = productService.getAllProductDTOs(PageRequest.of(page, size));
+        return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Products retrieved successfully", productDTOPage));
     }
 
     @GetMapping("/id")
     @Operation(summary = "Get a product by ID", description = "Retrieve a product by its unique ID.")
-    public ResponseEntity<ApiResponse<Product>> getProductById(@RequestParam String productId) {
-        Product product = productService.findProductById(productId);
-        return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Product retrieved successfully", product));
+    public ResponseEntity<ApiResponse<ProductDTO>> getProductById(@RequestParam String productId) {
+        ProductDTO productDTO = productService.getProductDTOById(productId);
+        return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Product retrieved successfully", productDTO));
     }
 }

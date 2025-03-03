@@ -1,5 +1,6 @@
 package com.tamimSoft.fakeStore.service;
 
+import com.tamimSoft.fakeStore.dto.CategoryDTO;
 import com.tamimSoft.fakeStore.entity.Category;
 import com.tamimSoft.fakeStore.exception.ResourceNotFoundException;
 import com.tamimSoft.fakeStore.repository.CategoryRepository;
@@ -13,48 +14,55 @@ import org.springframework.stereotype.Service;
 public class CategoryService {
     private final CategoryRepository categoryRepository;
 
-    /**
-     * Save a new category. to the database.
-     *
-     * @param category The category to be saved.
-     * @return The saved category.
-     */
-    public Category saveCategory(Category category) {
-        return categoryRepository.save(category);
+    public void createCategory(CategoryDTO categoryDTO) {
+        Category category = new Category();
+        category.setName(categoryDTO.getName());
+        category.setDescription(categoryDTO.getDescription());
+        category.setImageUrl(categoryDTO.getImageUrl());
+        categoryRepository.save(category);
     }
 
-    /**
-     * Retrieves all categories from the database.
-     *
-     * @param pageable The pageable object for pagination.
-     * @return A page of categories.
-     */
-    public Page<Category> findAllCategories(Pageable pageable) {
-        return categoryRepository.findAll(pageable);
+    public Page<CategoryDTO> getAllCategoryDTOs(Pageable pageable) {
+        return categoryRepository.findAll(pageable).map(
+                category -> new CategoryDTO(
+                        category.getId(),
+                        category.getName(),
+                        category.getDescription(),
+                        category.getImageUrl()
+                )
+        );
     }
 
-    /**
-     * Deletes a category by its ID.
-     *
-     * @param categoryId The ID of the category to be deleted.
-     * @throws ResourceNotFoundException If the category is not found.
-     */
+    public CategoryDTO getCategoryDTOById(String categoryId) {
+        return categoryRepository.findById(categoryId).map(
+                category -> new CategoryDTO(
+                        category.getId(),
+                        category.getName(),
+                        category.getDescription(),
+                        category.getImageUrl()
+                )
+        ).orElseThrow(() ->
+                new ResourceNotFoundException("Category not found with id: " + categoryId));
+    }
+
+    public Category getCategoryById(String categoryId) {
+        return categoryRepository.findById(categoryId).orElseThrow(() ->
+                new ResourceNotFoundException("Category not found with id: " + categoryId));
+    }
+
+    public void updateCategory(String id, CategoryDTO categoryDTO) {
+        Category categoryToUpdate = getCategoryById(id);
+        // Update only non-null fields
+        categoryToUpdate.setName(categoryDTO.getName() != null ? categoryDTO.getName() : categoryToUpdate.getName());
+        categoryToUpdate.setDescription(categoryDTO.getDescription() != null ? categoryDTO.getDescription() : categoryToUpdate.getDescription());
+        categoryToUpdate.setImageUrl(categoryDTO.getImageUrl() != null ? categoryDTO.getImageUrl() : categoryToUpdate.getImageUrl());
+        categoryRepository.save(categoryToUpdate);
+    }
+
     public void deleteById(String categoryId) {
         if (!categoryRepository.existsById(categoryId)) {
             throw new ResourceNotFoundException("Category not found with id: " + categoryId);
         }
         categoryRepository.deleteById(categoryId);
-    }
-
-    /**
-     * Finds a category by its ID.
-     *
-     * @param categoryId The ID of the category to find.
-     * @return The found category.
-     * @throws ResourceNotFoundException If the category is not found.
-     */
-    public Category findCategoryById(String categoryId) {
-        return categoryRepository.findById(categoryId).orElseThrow(() ->
-                new ResourceNotFoundException("Category not found with id: " + categoryId));
     }
 }

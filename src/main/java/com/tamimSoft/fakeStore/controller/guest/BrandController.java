@@ -1,6 +1,6 @@
-package com.tamimSoft.fakeStore.controller;
+package com.tamimSoft.fakeStore.controller.guest;
 
-import com.tamimSoft.fakeStore.entity.Brand;
+import com.tamimSoft.fakeStore.dto.BrandDTO;
 import com.tamimSoft.fakeStore.response.ApiResponse;
 import com.tamimSoft.fakeStore.service.BrandService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,18 +27,18 @@ public class BrandController {
 
     @GetMapping()
     @Operation(summary = "Get all brands", description = "Retrieve a list of all brands.")
-    public ResponseEntity<ApiResponse<Page<Brand>>> getAllBrands(
+    public ResponseEntity<ApiResponse<Page<BrandDTO>>> getAllBrands(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        Page<Brand> brands = brandService.findAllBrands(PageRequest.of(page, size));
-        return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Brands retrieved successfully", brands));
+        Page<BrandDTO> brandDTOS = brandService.getAllBrandDTOs(PageRequest.of(page, size));
+        return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Brands retrieved successfully", brandDTOS));
     }
 
     @GetMapping("/id")
     @Operation(summary = "Get a brand by ID", description = "Retrieve a brand by its unique ID.")
-    public ResponseEntity<ApiResponse<Brand>> getBrandById(@RequestParam String brandId) {
-        Brand brand = brandService.findBrandById(brandId);
-        return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Brand retrieved successfully", brand));
+    public ResponseEntity<ApiResponse<BrandDTO>> getBrandById(@RequestParam String brandId) {
+        BrandDTO brandDTO = brandService.getBrandDTOById(brandId);
+        return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Brand retrieved successfully", brandDTO));
     }
 }

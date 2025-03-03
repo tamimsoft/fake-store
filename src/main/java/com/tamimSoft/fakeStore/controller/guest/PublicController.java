@@ -1,4 +1,4 @@
-package com.tamimSoft.fakeStore.controller;
+package com.tamimSoft.fakeStore.controller.guest;
 
 import com.tamimSoft.fakeStore.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class PublicController {
     @GetMapping("/health")
     @Operation(summary = "Health check endpoint", description = "Check the health of the application.")
-    public ResponseEntity<ApiResponse<String>> healthCheck() {
+    public ResponseEntity<ApiResponse<Void>> healthCheck() {
         log.info("Health check endpoint called");
-        return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Application is healthy", "OK"));
+        return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Application is healthy", null));
     }
 }
