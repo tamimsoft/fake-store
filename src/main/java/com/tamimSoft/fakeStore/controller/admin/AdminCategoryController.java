@@ -1,7 +1,6 @@
 package com.tamimSoft.fakeStore.controller.admin;
 
 import com.tamimSoft.fakeStore.dto.CategoryDTO;
-import com.tamimSoft.fakeStore.entity.Category;
 import com.tamimSoft.fakeStore.response.ApiResponse;
 import com.tamimSoft.fakeStore.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,22 +24,23 @@ public class AdminCategoryController {
 
     @PostMapping()
     @Operation(summary = "Create a category", description = "Allows admin to create a new category.")
-    public ResponseEntity<ApiResponse<Category>> createCategory(@RequestBody CategoryDTO categoryDTO) {
-        Category category = new Category();
-        category.setName(categoryDTO.getName());
-        category.setDescription(categoryDTO.getDescription());
-        category.setImageUrl(categoryDTO.getImageUrl());
-        Category savedCategory = categoryService.saveCategory(category);
-        log.info("Category created successfully: {}", savedCategory);
-
+    public ResponseEntity<ApiResponse<Void>> createCategory(@RequestBody CategoryDTO categoryDTO) {
+        categoryService.createCategory(categoryDTO);
+        log.info("Category created successfully");
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new ApiResponse<>(HttpStatus.CREATED, "Category created successfully", savedCategory));
+                .body(new ApiResponse<>(HttpStatus.CREATED, "Category created successfully", null));
+    }
+    @PatchMapping()
+    @Operation(summary = "Update a category", description = "Allows admin to update a category.")
+    public ResponseEntity<ApiResponse<Void>> updateCategory(@RequestParam String id, @RequestBody CategoryDTO categoryDTO) {
+        categoryService.updateCategory(id, categoryDTO);
+        return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Brand updated successfully", null));
     }
 
     @DeleteMapping()
     @Operation(summary = "Delete a category", description = "Allows admin to delete a category.")
-    public ResponseEntity<?> deleteCategory(@RequestParam String categoryId) {
-        categoryService.deleteById(categoryId);
+    public ResponseEntity<Void> deleteCategory(@RequestParam String id) {
+        categoryService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 }
