@@ -11,6 +11,7 @@ import com.tamimSoft.fakeStore.service.OTPService;
 import com.tamimSoft.fakeStore.service.RefreshTokenService;
 import com.tamimSoft.fakeStore.service.UserDetailsServiceImpl;
 import com.tamimSoft.fakeStore.service.UserService;
+import com.tamimSoft.fakeStore.utils.Extensions;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -84,9 +85,13 @@ public class AuthController {
     @GetMapping("/login")
     @Operation(summary = "User login", description = "Allows users to log in to their account.")
     public ResponseEntity<ApiResponse<TokenDTO>> userLogin(
-            @RequestParam String userName,
+            @RequestParam String emailOrUserName,
             @RequestParam String password
     ) {
+        String userName = emailOrUserName;
+        if (Extensions.isEmail(emailOrUserName)) {
+            userName = userService.getUserByEmail(emailOrUserName).getUserName();
+        }
         String userDetailsUserName = getUserDetailsUserName(userName, password);
         TokenDTO tokenDTO = refreshTokenService.generateNewTokens(userDetailsUserName);
         return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Login Successful", tokenDTO));

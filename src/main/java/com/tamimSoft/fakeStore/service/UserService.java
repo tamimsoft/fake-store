@@ -72,6 +72,10 @@ public class UserService {
         return userRepository.findByUserName(username).orElseThrow(() -> new ResourceNotFoundException("User not found with customer name: " + username));
     }
 
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User not found with customer email: " + email));
+    }
+
     public void deleteUserByUserName(String username) {
         if (!userRepository.existsByUserName(username)) {
             throw new ResourceNotFoundException("User not found with customer name: " + username);
