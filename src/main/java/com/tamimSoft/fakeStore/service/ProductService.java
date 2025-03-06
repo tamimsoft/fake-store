@@ -5,6 +5,7 @@ import com.tamimSoft.fakeStore.entity.*;
 import com.tamimSoft.fakeStore.exception.ResourceNotFoundException;
 import com.tamimSoft.fakeStore.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ProductService {
     final private BrandService brandService;
     final private CategoryService categoryService;
@@ -67,10 +69,7 @@ public class ProductService {
     }
 
     public Page<ProductDTO> getAllProductDTOs(Pageable pageable, String categoryId, String brandId, Set<String> tagIds) {
-
-        if (tagIds.isEmpty()) {
-            tagIds = null;
-        }
+        log.warn("getAllProductDTOs called with categoryId: {}, brandId: {}, tagIds: {}", categoryId, brandId, tagIds);
         return productRepository.findProductsByFilters(categoryId, brandId, tagIds, pageable).map(
                 product -> new ProductDTO(
                         product.getId(),

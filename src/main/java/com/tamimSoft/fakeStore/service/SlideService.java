@@ -79,7 +79,9 @@ public class SlideService {
 
     public void updateSlide(String slideId, SlideDTO slideDTO) {
         Slide slide = getSlideById(slideId);
+        modelMapper.getConfiguration().setSkipNullEnabled(true); // Prevent overwriting existing values
         modelMapper.map(slideDTO, slide);
+
         slideRepository.save(slide);
     }
 
