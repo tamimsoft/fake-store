@@ -31,10 +31,14 @@ public class AdminProductController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ApiResponse<>(HttpStatus.CREATED, "Product created successfully", null));
     }
+
     @PatchMapping()
     @Operation(summary = "Update a product", description = "Allows admin to update a product.")
-    public ResponseEntity<ApiResponse<Void>> updateProduct(@RequestBody ProductDTO productDTO) {
-        productService.updateProduct(productDTO);
+    public ResponseEntity<ApiResponse<Void>> updateProduct(
+            @RequestParam String id,
+            @RequestBody ProductDTO productDTO
+    ) {
+        productService.updateProduct(id, productDTO);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ApiResponse<>(HttpStatus.CREATED, "Product updated successfully", null));
     }

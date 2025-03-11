@@ -117,7 +117,7 @@ public class ProductService {
         return productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + productId));
     }
 
-    public void updateProduct(ProductDTO productDTO) {
+    public void updateProduct(String id, ProductDTO productDTO) {
         Set<ProductTag> tags = new HashSet<>();
 
         if (productDTO.getTagIds() != null) {
@@ -125,7 +125,7 @@ public class ProductService {
                 tags.add(productTagService.getTagById(tagId));
             }
         }
-        Product product = getProductById(productDTO.getId());
+        Product product = getProductById(id);
         product.setName(productDTO.getName() != null ? productDTO.getName() : product.getName());
         product.setDescription(productDTO.getDescription() != null ? productDTO.getDescription() : product.getDescription());
         product.setPrice(productDTO.getPrice() > 0 ? productDTO.getPrice() : product.getPrice());
