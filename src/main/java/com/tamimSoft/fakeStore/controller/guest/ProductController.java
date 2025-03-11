@@ -6,6 +6,7 @@ import com.tamimSoft.fakeStore.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ import java.util.Set;
 @RequestMapping("/products")
 @RequiredArgsConstructor
 @Tag(name = "Public APIs")
+@Slf4j
 public class ProductController {
     private final ProductService productService;
 
@@ -34,7 +36,6 @@ public class ProductController {
             @RequestParam(required = false) Set<String> tagIds
     ) {
         Page<ProductDTO> productDTOPage = productService.getAllProductDTOs(PageRequest.of(page, size), categoryId, brandId, tagIds);
-//        Page<ProductDTO> productDTOPage = productService.getAllProductDTOs(PageRequest.of(page, size));
         return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Products retrieved successfully", productDTOPage));
     }
 

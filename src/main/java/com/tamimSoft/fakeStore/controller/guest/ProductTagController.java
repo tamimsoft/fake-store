@@ -31,7 +31,7 @@ public class ProductTagController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        Page<ProductTagDTO> productTagDTOS = productTagService.getAllTagDTOs(PageRequest.of(page, size));
+        Page<ProductTagDTO> productTagDTOS = productTagService.getAllActiveTagDTOs(PageRequest.of(page, size));
         return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Product-tags retrieved successfully", productTagDTOS));
     }
 
