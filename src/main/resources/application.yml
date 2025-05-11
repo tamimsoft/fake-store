@@ -1,6 +1,6 @@
 spring:
   application:
-    name: FakeStore
+    name: Store
   profiles:
     active: dev
 
