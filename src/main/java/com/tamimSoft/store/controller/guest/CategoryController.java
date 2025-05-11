@@ -1,6 +1,6 @@
 package com.tamimSoft.store.controller.guest;
 
-import com.tamimSoft.store.dto.CategoryDTO;
+import com.tamimSoft.store.dto.CategoryDto;
 import com.tamimSoft.store.response.ApiResponse;
 import com.tamimSoft.store.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,19 +27,19 @@ public class CategoryController {
 
     @GetMapping()
     @Operation(summary = "Get all categories", description = "Retrieve a list of all categories.")
-    public ResponseEntity<ApiResponse<Page<CategoryDTO>>> getAllCategories(
+    public ResponseEntity<ApiResponse<Page<CategoryDto>>> getAllCategories(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        Page<CategoryDTO> categoryDTO = categoryService.getAllCategoryDTOs(PageRequest.of(page, size));
+        Page<CategoryDto> categoryDTO = categoryService.getAllCategoryDTOs(PageRequest.of(page, size));
         return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Categories retrieved successfully", categoryDTO));
     }
 
     @GetMapping("/id")
     @Operation(summary = "Get a category by ID", description = "Retrieve a category by its unique ID.")
-    public ResponseEntity<ApiResponse<CategoryDTO>> getCategoryById(@RequestParam String categoryId
+    public ResponseEntity<ApiResponse<CategoryDto>> getCategoryById(@RequestParam String categoryId
     ) {
-        CategoryDTO categoryDTO = categoryService.getCategoryDTOById(categoryId);
+        CategoryDto categoryDTO = categoryService.getCategoryDTOById(categoryId);
         return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Category retrieved successfully", categoryDTO));
 
     }

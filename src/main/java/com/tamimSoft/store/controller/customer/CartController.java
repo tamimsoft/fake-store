@@ -1,7 +1,7 @@
 package com.tamimSoft.store.controller.customer;
 
-import com.tamimSoft.store.dto.AddToCartDTO;
-import com.tamimSoft.store.dto.CartDTO;
+import com.tamimSoft.store.dto.AddToCartDto;
+import com.tamimSoft.store.dto.CartDto;
 import com.tamimSoft.store.response.ApiResponse;
 import com.tamimSoft.store.service.CartService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,15 +32,15 @@ public class CartController {
 
     @GetMapping()
     @Operation(summary = "Get all carts", description = "Get all carts of the authenticated customer.")
-    public ResponseEntity<ApiResponse<List<CartDTO>>> getAllCarts() {
-        List<CartDTO> cartDTOPage = cartService.getAllCartDTOsByUserName(getAuthenticatedUsername());
-        return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Carts retrieved successfully", cartDTOPage));
+    public ResponseEntity<ApiResponse<List<CartDto>>> getAllCarts() {
+        List<CartDto> cartDtoPage = cartService.getAllCartDTOsByUserName(getAuthenticatedUsername());
+        return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Carts retrieved successfully", cartDtoPage));
     }
 
     @PostMapping()
     @Operation(summary = "Add to cart", description = "Add a product to the cart.")
     public ResponseEntity<ApiResponse<Void>> addToCart(
-            @RequestBody AddToCartDTO addToCartDTO
+            @RequestBody AddToCartDto addToCartDTO
     ) {
         cartService.addToCart(addToCartDTO, getAuthenticatedUsername());
         return ResponseEntity.status(HttpStatus.CREATED).body(
@@ -53,7 +53,7 @@ public class CartController {
     @Operation(summary = "Update cart", description = "Update cart details.")
     public ResponseEntity<ApiResponse<Void>> updateCart(
             @RequestParam String cartId,
-            @RequestBody AddToCartDTO addToCartDTO
+            @RequestBody AddToCartDto addToCartDTO
     ) {
         cartService.updateCart(cartId, addToCartDTO);
         return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Cart updated successfully", null));

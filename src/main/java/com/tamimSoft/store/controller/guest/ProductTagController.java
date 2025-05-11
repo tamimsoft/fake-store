@@ -1,6 +1,6 @@
 package com.tamimSoft.store.controller.guest;
 
-import com.tamimSoft.store.dto.ProductTagDTO;
+import com.tamimSoft.store.dto.ProductTagDto;
 import com.tamimSoft.store.response.ApiResponse;
 import com.tamimSoft.store.service.ProductTagService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,18 +27,18 @@ public class ProductTagController {
 
     @GetMapping()
     @Operation(summary = "Get all product-tags", description = "Retrieve a list of all product-tags.")
-    public ResponseEntity<ApiResponse<Page<ProductTagDTO>>> getAllBrands(
+    public ResponseEntity<ApiResponse<Page<ProductTagDto>>> getAllBrands(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        Page<ProductTagDTO> productTagDTOS = productTagService.getAllActiveTagDTOs(PageRequest.of(page, size));
+        Page<ProductTagDto> productTagDTOS = productTagService.getAllActiveTagDTOs(PageRequest.of(page, size));
         return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Product-tags retrieved successfully", productTagDTOS));
     }
 
     @GetMapping("/id")
     @Operation(summary = "Get a product-tag by ID", description = "Retrieve a product-tag by its unique ID.")
-    public ResponseEntity<ApiResponse<ProductTagDTO>> getBrandById(@RequestParam String tagId) {
-        ProductTagDTO productTagDTO = productTagService.getTagDTOById(tagId);
+    public ResponseEntity<ApiResponse<ProductTagDto>> getBrandById(@RequestParam String tagId) {
+        ProductTagDto productTagDTO = productTagService.getTagDTOById(tagId);
         return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Product-tag retrieved successfully", productTagDTO));
     }
 }

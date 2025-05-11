@@ -1,11 +1,12 @@
 package com.tamimSoft.store.service;
 
-import com.tamimSoft.store.dto.ProductDTO;
+import com.tamimSoft.store.dto.ProductDto;
 import com.tamimSoft.store.entity.*;
 import com.tamimSoft.store.exception.ResourceNotFoundException;
 import com.tamimSoft.store.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,29 +25,33 @@ public class ProductService {
     final private UserService userService;
 
     final private ProductRepository productRepository;
+    private final ModelMapper modelMapper;
 
-    private static Product arrangeProduct(ProductDTO productDTO, Brand brand, Category category, Set<ProductTag> tags) {
+    private static Product arrangeProduct(ProductDto productDTO, Brand brand, Category category, Set<Tag> tags) {
         Product product = new Product();
         product.setName(productDTO.getName());
         product.setSlug(productDTO.getName().toLowerCase().replaceAll("\\s+", "-"));
         product.setDescription(productDTO.getDescription());
-        product.setPrice(productDTO.getPrice());
-        product.setDiscount(productDTO.getDiscount());
+        product.setRegularPrice(productDTO.getRegularPrice());
+        product.setCurrentPrice(productDTO.getCurrentPrice());
+        product.setDiscountPercentage(productDTO.getDiscountPercentage());
+        product.setQuantity(productDTO.getQuantity());
+        product.setAverageRating(productDTO.getAverageRating());
+        product.setTotalReviews(productDTO.getTotalReviews());
         product.setColors(productDTO.getColors());
         product.setSizes(productDTO.getSizes());
         product.setMaterial(productDTO.getMaterial());
         product.setImageUrls(productDTO.getImageUrls());
-        product.setStock(productDTO.getStock());
         product.setBrand(brand);
         product.setCategory(category);
         product.setTags(tags);
         return product;
     }
 
-    public void createProduct(ProductDTO productDTO, String userName) {
+    public void createProduct(ProductDto productDTO, String userName) {
         Brand brand = new Brand();
         Category category = new Category();
-        Set<ProductTag> tags = new HashSet<>();
+        Set<Tag> tags = new HashSet<>();
 
         if (productDTO.getTagIds() != null) {
             for (String tagId : productDTO.getTagIds()) {
@@ -68,48 +73,16 @@ public class ProductService {
         userService.updateUser(user);
     }
 
-    public Page<ProductDTO> getAllProductDTOs(Pageable pageable, String categoryId, String brandId, Set<String> tagIds) {
+    public Page<ProductDto> getAllProductDTOs(Pageable pageable, String categoryId, String brandId, Set<String> tagIds) {
         log.warn("getAllProductDTOs called with categoryId: {}, brandId: {}, tagIds: {}", categoryId, brandId, tagIds);
         return productRepository.findProductsByFilters(categoryId, brandId, tagIds, pageable).map(
-                product -> new ProductDTO(
-                        product.getId(),
-                        product.getName(),
-                        product.getDescription(),
-                        product.getPrice(),
-                        product.getDiscount(),
-                        product.getColors(),
-                        product.getSizes(),
-                        product.getMaterial(),
-                        product.getStock(),
-                        product.getImageUrls(),
-                        product.getBrand().getId(),
-                        product.getCategory().getId(),
-                        product.getTags().stream().map(
-                                ProductTag::getId
-                        ).collect(Collectors.toSet())
-                )
+                this::getProductDto
         );
     }
 
-    public ProductDTO getProductDTOById(String productId) {
+    public ProductDto getProductDTOById(String productId) {
         return productRepository.findById(productId).map(
-                product -> new ProductDTO(
-                        product.getId(),
-                        product.getName(),
-                        product.getDescription(),
-                        product.getPrice(),
-                        product.getDiscount(),
-                        product.getColors(),
-                        product.getSizes(),
-                        product.getMaterial(),
-                        product.getStock(),
-                        product.getImageUrls(),
-                        product.getBrand().getId(),
-                        product.getCategory().getId(),
-                        product.getTags().stream().map(
-                                ProductTag::getId
-                        ).collect(Collectors.toSet())
-                )
+                this::getProductDto
         ).orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + productId));
     }
 
@@ -117,8 +90,8 @@ public class ProductService {
         return productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + productId));
     }
 
-    public void updateProduct(String id, ProductDTO productDTO) {
-        Set<ProductTag> tags = new HashSet<>();
+    public void updateProduct(String id, ProductDto productDTO) {
+        Set<Tag> tags = new HashSet<>();
 
         if (productDTO.getTagIds() != null) {
             for (String tagId : productDTO.getTagIds()) {
@@ -126,18 +99,10 @@ public class ProductService {
             }
         }
         Product product = getProductById(id);
-        product.setName(productDTO.getName() != null ? productDTO.getName() : product.getName());
-        product.setDescription(productDTO.getDescription() != null ? productDTO.getDescription() : product.getDescription());
-        product.setPrice(productDTO.getPrice() > 0 ? productDTO.getPrice() : product.getPrice());
-        product.setDiscount(productDTO.getDiscount() > 0 ? productDTO.getDiscount() : product.getDiscount());
-        product.setColors(productDTO.getColors() != null ? productDTO.getColors() : product.getColors());
-        product.setSizes(productDTO.getSizes() != null ? productDTO.getSizes() : product.getSizes());
-        product.setMaterial(productDTO.getMaterial() != null ? productDTO.getMaterial() : product.getMaterial());
-        product.setImageUrls(productDTO.getImageUrls() != null ? productDTO.getImageUrls() : product.getImageUrls());
-        product.setStock(productDTO.getStock() != null ? productDTO.getStock() : product.getStock());
-        product.setBrand(productDTO.getBrandId() != null ? brandService.getBrandById(productDTO.getBrandId()) : product.getBrand());
-        product.setCategory(productDTO.getCategoryId() != null ? categoryService.getCategoryById(productDTO.getCategoryId()) : product.getCategory());
-        product.setTags(productDTO.getTagIds() != null ? tags : product.getTags());
+
+        modelMapper.getConfiguration().setSkipNullEnabled(true); // Prevent overwriting existing values
+        modelMapper.map(productDTO, product);
+
     }
 
     public void deleteById(String productId) {
@@ -145,6 +110,35 @@ public class ProductService {
             throw new ResourceNotFoundException("Product not found with id: " + productId);
         }
         productRepository.deleteById(productId);
+    }
+
+    private ProductDto getProductDto(Product product) {
+        ProductDto pDto = modelMapper.map(product, ProductDto.class);
+
+        // Manually set IDs instead of full objects
+
+        pDto.setName(product.getName());
+        pDto.setDescription(product.getDescription());
+        pDto.setImageUrls(product.getImageUrls());
+        pDto.setRegularPrice(product.getRegularPrice() != null ? product.getRegularPrice() : null);
+        pDto.setCurrentPrice(product.getCurrentPrice() != null ? product.getCurrentPrice() : null);
+        pDto.setColors(product.getColors());
+        pDto.setMaterial(product.getMaterial());
+        pDto.setQuantity(product.getQuantity());
+        pDto.setSizes(product.getSizes() != null ? product.getSizes() : null);
+        pDto.setId(product.getId() != null ? product.getId() : null);
+
+        pDto.setDiscountPercentage(product.getDiscountPercentage());
+        pDto.setAverageRating(product.getAverageRating());
+        pDto.setTotalReviews(product.getTotalReviews());
+
+        pDto.setBrandId(product.getBrand().getId());
+        pDto.setCategoryId(product.getCategory().getId());
+        pDto.setTagIds(product.getTags().stream().map(
+                Tag::getId
+        ).collect(Collectors.toSet()));
+
+        return pDto;
     }
 
 }

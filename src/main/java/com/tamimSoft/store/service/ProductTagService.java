@@ -1,7 +1,7 @@
 package com.tamimSoft.store.service;
 
-import com.tamimSoft.store.dto.ProductTagDTO;
-import com.tamimSoft.store.entity.ProductTag;
+import com.tamimSoft.store.dto.ProductTagDto;
+import com.tamimSoft.store.entity.Tag;
 import com.tamimSoft.store.exception.ResourceNotFoundException;
 import com.tamimSoft.store.repository.ProductRepository;
 import com.tamimSoft.store.repository.ProductTagRepository;
@@ -21,27 +21,27 @@ public class ProductTagService {
     private final ProductRepository productRepository;
 
 
-    public void createTag(ProductTagDTO tagDTO) {
-        ProductTag tag = new ProductTag();
+    public void createTag(ProductTagDto tagDTO) {
+        Tag tag = new Tag();
         tag.setName(tagDTO.getName());
         productTagRepository.save(tag);
     }
 
-    public Page<ProductTagDTO> getAllActiveTagDTOs(Pageable pageable) {
+    public Page<ProductTagDto> getAllActiveTagDTOs(Pageable pageable) {
 
-        Page<ProductTag> productTagsPage = productTagRepository.findAll(pageable);
+        Page<Tag> productTagsPage = productTagRepository.findAll(pageable);
 
-        List<ProductTagDTO> filteredTags = productTagsPage.stream()
+        List<ProductTagDto> filteredTags = productTagsPage.stream()
                 .filter(tag -> productRepository.findByTagsContaining(tag).isPresent())
-                .map(tag -> new ProductTagDTO(tag.getId(), tag.getName()))
+                .map(tag -> new ProductTagDto(tag.getId(), tag.getName()))
                 .toList();
 
         return new PageImpl<>(filteredTags, pageable, productTagsPage.getTotalElements());
     }
 
-    public Page<ProductTagDTO> getAllTagDTOs(Pageable pageable) {
+    public Page<ProductTagDto> getAllTagDTOs(Pageable pageable) {
         return productTagRepository.findAll(pageable).map(
-                tag -> new ProductTagDTO(
+                tag -> new ProductTagDto(
                         tag.getId(),
                         tag.getName()
                 )
@@ -49,22 +49,22 @@ public class ProductTagService {
 
     }
 
-    public ProductTagDTO getTagDTOById(String tagId) {
+    public ProductTagDto getTagDTOById(String tagId) {
         return productTagRepository.findById(tagId).map(
-                tag -> new ProductTagDTO(
+                tag -> new ProductTagDto(
                         tag.getId(),
                         tag.getName()
                 )
         ).orElseThrow(() -> new ResourceNotFoundException("Tag not found with id: " + tagId));
     }
 
-    public ProductTag getTagById(String tagId) {
+    public Tag getTagById(String tagId) {
         return productTagRepository.findById(tagId).orElseThrow(() -> new ResourceNotFoundException("Tag not found with id: " + tagId));
     }
 
 
-    public void updateTag(String id, ProductTagDTO tagDTO) {
-        ProductTag productTag = getTagById(id);
+    public void updateTag(String id, ProductTagDto tagDTO) {
+        Tag productTag = getTagById(id);
         productTag.setName(tagDTO.getName() != null ? tagDTO.getName() : productTag.getName());
         productTagRepository.save(productTag);
     }

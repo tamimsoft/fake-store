@@ -1,7 +1,7 @@
 package com.tamimSoft.store.service;
 
-import com.tamimSoft.store.dto.AddToCartDTO;
-import com.tamimSoft.store.dto.CartDTO;
+import com.tamimSoft.store.dto.AddToCartDto;
+import com.tamimSoft.store.dto.CartDto;
 import com.tamimSoft.store.entity.Cart;
 import com.tamimSoft.store.entity.Product;
 import com.tamimSoft.store.entity.User;
@@ -21,7 +21,7 @@ public class CartService {
     private final UserService userService;
 
     @Transactional
-    public void addToCart(AddToCartDTO addToCartDTO, String userName) {
+    public void addToCart(AddToCartDto addToCartDTO, String userName) {
 
         Product product = productService.getProductById(addToCartDTO.getProductId());
         Cart cart = new Cart();
@@ -35,9 +35,9 @@ public class CartService {
         userService.updateUser(user);
     }
 
-    public List<CartDTO> getAllCartDTOsByUserName(String userName) {
+    public List<CartDto> getAllCartDTOsByUserName(String userName) {
         User user = userService.getUserByUserName(userName);
-        return user.getCarts().stream().map(cart -> new CartDTO(cart.getId(), cart.getQuantity(), cart.getColor(), cart.getSize(), cart.getProduct())).toList();
+        return user.getCarts().stream().map(cart -> new CartDto(cart.getId(), cart.getQuantity(), cart.getColor(), cart.getSize(), cart.getProduct())).toList();
     }
 
 
@@ -45,7 +45,7 @@ public class CartService {
         return cartRepository.findById(cartId).orElseThrow(() -> new ResourceNotFoundException("Cart not found with id: " + cartId));
     }
 
-    public void updateCart(String cartId, AddToCartDTO addToCartDTO) {
+    public void updateCart(String cartId, AddToCartDto addToCartDTO) {
         Cart cartToUpdate = getCartById(cartId);
         // Update only non-null fields
         cartToUpdate.setQuantity(addToCartDTO.getQuantity());

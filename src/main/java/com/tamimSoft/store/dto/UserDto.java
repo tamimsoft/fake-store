@@ -7,12 +7,20 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class ProductTagDTO {
+public class UserDto {
     @Hidden
     private String id;
-    private String name;
+    private String userName;
+    private String firstName;
+    private String lastName;
+    private String password;
+    private String email;
+    private String phone;
+    private Set<String> roles;
 }

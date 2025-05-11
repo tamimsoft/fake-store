@@ -1,6 +1,6 @@
 package com.tamimSoft.store.service;
 
-import com.tamimSoft.store.dto.CategoryDTO;
+import com.tamimSoft.store.dto.CategoryDto;
 import com.tamimSoft.store.entity.Category;
 import com.tamimSoft.store.exception.ResourceNotFoundException;
 import com.tamimSoft.store.repository.CategoryRepository;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 public class CategoryService {
     private final CategoryRepository categoryRepository;
 
-    public void createCategory(CategoryDTO categoryDTO) {
+    public void createCategory(CategoryDto categoryDTO) {
         Category category = new Category();
         category.setName(categoryDTO.getName());
         category.setDescription(categoryDTO.getDescription());
@@ -22,9 +22,9 @@ public class CategoryService {
         categoryRepository.save(category);
     }
 
-    public Page<CategoryDTO> getAllCategoryDTOs(Pageable pageable) {
+    public Page<CategoryDto> getAllCategoryDTOs(Pageable pageable) {
         return categoryRepository.findAll(pageable).map(
-                category -> new CategoryDTO(
+                category -> new CategoryDto(
                         category.getId(),
                         category.getName(),
                         category.getDescription(),
@@ -33,9 +33,9 @@ public class CategoryService {
         );
     }
 
-    public CategoryDTO getCategoryDTOById(String categoryId) {
+    public CategoryDto getCategoryDTOById(String categoryId) {
         return categoryRepository.findById(categoryId).map(
-                category -> new CategoryDTO(
+                category -> new CategoryDto(
                         category.getId(),
                         category.getName(),
                         category.getDescription(),
@@ -50,7 +50,7 @@ public class CategoryService {
                 new ResourceNotFoundException("Category not found with id: " + categoryId));
     }
 
-    public void updateCategory(String id, CategoryDTO categoryDTO) {
+    public void updateCategory(String id, CategoryDto categoryDTO) {
         Category categoryToUpdate = getCategoryById(id);
         // Update only non-null fields
         categoryToUpdate.setName(categoryDTO.getName() != null ? categoryDTO.getName() : categoryToUpdate.getName());

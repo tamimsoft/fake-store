@@ -1,6 +1,6 @@
 package com.tamimSoft.store.controller.admin;
 
-import com.tamimSoft.store.dto.ProductTagDTO;
+import com.tamimSoft.store.dto.ProductTagDto;
 import com.tamimSoft.store.response.ApiResponse;
 import com.tamimSoft.store.service.ProductTagService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,17 +26,17 @@ public class AdminTagController {
 
     @GetMapping()
     @Operation(summary = "Get all tags", description = "Retrieve a list of all tags.")
-    public ResponseEntity<ApiResponse<Page<ProductTagDTO>>> getAllTags(
+    public ResponseEntity<ApiResponse<Page<ProductTagDto>>> getAllTags(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        Page<ProductTagDTO> allTagDTOs = tagService.getAllTagDTOs(PageRequest.of(page, size));
+        Page<ProductTagDto> allTagDTOs = tagService.getAllTagDTOs(PageRequest.of(page, size));
         return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Tags retrieved successfully", allTagDTOs));
     }
 
     @PostMapping()
     @Operation(summary = "Create a tag", description = "Allows admin to create a new product tag.")
-    public ResponseEntity<ApiResponse<Void>> createTag(@RequestBody ProductTagDTO productTagDTO) {
+    public ResponseEntity<ApiResponse<Void>> createTag(@RequestBody ProductTagDto productTagDTO) {
         tagService.createTag(productTagDTO);
         log.info("Tag created successfully");
 
@@ -47,7 +47,7 @@ public class AdminTagController {
 
     @PatchMapping()
     @Operation(summary = "Update a product tag", description = "Allows admin to update a product tag.")
-    public ResponseEntity<ApiResponse<Void>> updateTag(@RequestParam String id, @RequestBody ProductTagDTO productTagDTO) {
+    public ResponseEntity<ApiResponse<Void>> updateTag(@RequestParam String id, @RequestBody ProductTagDto productTagDTO) {
         tagService.updateTag(id, productTagDTO);
         return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Tag updated successfully", null));
     }

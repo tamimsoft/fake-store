@@ -1,6 +1,6 @@
 package com.tamimSoft.store.controller.admin;
 
-import com.tamimSoft.store.dto.SlideDTO;
+import com.tamimSoft.store.dto.SlideDto;
 import com.tamimSoft.store.response.ApiResponse;
 import com.tamimSoft.store.service.SlideService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,7 +23,7 @@ public class AdminSlideController {
 
     @PostMapping()
     @Operation(summary = "Create a slide", description = "Allows admin to create a new slide.")
-    public ResponseEntity<ApiResponse<Void>> createSlide(@RequestBody SlideDTO slideDTO) {
+    public ResponseEntity<ApiResponse<Void>> createSlide(@RequestBody SlideDto slideDTO) {
         slideService.createSlide(slideDTO);
         log.info("slide created successfully");
 
@@ -33,7 +33,7 @@ public class AdminSlideController {
 
     @PatchMapping()
     @Operation(summary = "Update a slide", description = "Allows admin to update a slide.")
-    public ResponseEntity<ApiResponse<Void>> updateSlide(@RequestParam String id, @RequestBody SlideDTO slideDTO) {
+    public ResponseEntity<ApiResponse<Void>> updateSlide(@RequestParam String id, @RequestBody SlideDto slideDTO) {
         slideService.updateSlide(id, slideDTO);
         return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "slide updated successfully", null));
     }

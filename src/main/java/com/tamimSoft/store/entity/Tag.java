@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Document("tags")
 @Hidden
-public class ProductTag {
+public class Tag {
     @Id
     private String id;
     @NonNull

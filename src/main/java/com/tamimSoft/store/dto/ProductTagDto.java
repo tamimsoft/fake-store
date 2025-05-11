@@ -7,17 +7,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class BrandDTO {
+public class ProductTagDto {
     @Hidden
     private String id;
     private String name;
-    private String description;
-    private String imageUrl;
-    private Set<String> categoryIds;
 }

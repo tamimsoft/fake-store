@@ -1,6 +1,6 @@
 package com.tamimSoft.store.controller.admin;
 
-import com.tamimSoft.store.dto.UserDTO;
+import com.tamimSoft.store.dto.UserDto;
 import com.tamimSoft.store.response.ApiResponse;
 import com.tamimSoft.store.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,22 +26,22 @@ public class AdminUserController {
 
     @GetMapping("/all-users")
     @Operation(summary = "Get all users", description = "Retrieve a list of all users.")
-    public ResponseEntity<ApiResponse<Page<UserDTO>>> getAllUsers(
+    public ResponseEntity<ApiResponse<Page<UserDto>>> getAllUsers(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        Page<UserDTO> userDTOPage = userService.getAllUserDTOs(PageRequest.of(page, size));
+        Page<UserDto> userDTOPage = userService.getAllUserDTOs(PageRequest.of(page, size));
         return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Users retrieved successfully", userDTOPage));
     }
 
     @GetMapping("/all-users-by-role")
     @Operation(summary = "Get all users", description = "Fetches all users by an specific role.")
-    public ResponseEntity<ApiResponse<Page<UserDTO>>> getAllUsersByRole(
+    public ResponseEntity<ApiResponse<Page<UserDto>>> getAllUsersByRole(
             @RequestParam String role,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        Page<UserDTO> allUsersByRole = userService.getAllUserDTOsByRole(role, PageRequest.of(page, size));
+        Page<UserDto> allUsersByRole = userService.getAllUserDTOsByRole(role, PageRequest.of(page, size));
         return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Users retrieved successfully", allUsersByRole));
     }
 
@@ -49,7 +49,7 @@ public class AdminUserController {
     @Operation(summary = "Update a customer with new roles", description = "Update details of an existing customer.")
     public ResponseEntity<ApiResponse<Void>> updateUser(
             @RequestParam String userName,
-            @RequestBody UserDTO userDTO
+            @RequestBody UserDto userDTO
     ) {
         userService.updateUserInfoWithRole(userDTO, userName);
         return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "User details updated successfully", null));

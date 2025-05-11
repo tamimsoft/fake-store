@@ -1,6 +1,6 @@
 package com.tamimSoft.store.controller.admin;
 
-import com.tamimSoft.store.dto.ProductDTO;
+import com.tamimSoft.store.dto.ProductDto;
 import com.tamimSoft.store.response.ApiResponse;
 import com.tamimSoft.store.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,7 +26,7 @@ public class AdminProductController {
 
     @PostMapping()
     @Operation(summary = "Create a product", description = "Allows admin to create a new product.")
-    public ResponseEntity<ApiResponse<Void>> createProduct(@RequestBody ProductDTO productDTO) {
+    public ResponseEntity<ApiResponse<Void>> createProduct(@RequestBody ProductDto productDTO) {
         productService.createProduct(productDTO, getAuthenticatedUsername());
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ApiResponse<>(HttpStatus.CREATED, "Product created successfully", null));
@@ -36,7 +36,7 @@ public class AdminProductController {
     @Operation(summary = "Update a product", description = "Allows admin to update a product.")
     public ResponseEntity<ApiResponse<Void>> updateProduct(
             @RequestParam String id,
-            @RequestBody ProductDTO productDTO
+            @RequestBody ProductDto productDTO
     ) {
         productService.updateProduct(id, productDTO);
         return ResponseEntity.status(HttpStatus.CREATED)

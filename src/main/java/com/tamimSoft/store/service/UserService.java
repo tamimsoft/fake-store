@@ -1,7 +1,7 @@
 package com.tamimSoft.store.service;
 
-import com.tamimSoft.store.dto.SignUpDTO;
-import com.tamimSoft.store.dto.UserDTO;
+import com.tamimSoft.store.dto.SignUpDto;
+import com.tamimSoft.store.dto.UserDto;
 import com.tamimSoft.store.entity.User;
 import com.tamimSoft.store.exception.ResourceNotFoundException;
 import com.tamimSoft.store.repository.UserRepository;
@@ -21,20 +21,20 @@ public class UserService {
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 
-    public Page<UserDTO> getAllUserDTOs(Pageable pageable) {
-        return userRepository.findAll(pageable).map(user -> new UserDTO(user.getId(), user.getUserName(), user.getFirstName(), user.getLastName(), null, // Do not expose password
+    public Page<UserDto> getAllUserDTOs(Pageable pageable) {
+        return userRepository.findAll(pageable).map(user -> new UserDto(user.getId(), user.getUserName(), user.getFirstName(), user.getLastName(), null, // Do not expose password
                 user.getEmail(), user.getPhone(), user.getRoles()));
     }
 
-    public Page<UserDTO> getAllUserDTOsByRole(String role, Pageable pageable) {
+    public Page<UserDto> getAllUserDTOsByRole(String role, Pageable pageable) {
         if (role == null || role.trim().isEmpty()) {
             throw new IllegalArgumentException("Role cannot be null or empty");
         }
-        return userRepository.findAllByRolesContaining(role, pageable).map(user -> new UserDTO(user.getId(), user.getUserName(), user.getFirstName(), user.getLastName(), null, // Do not expose password
+        return userRepository.findAllByRolesContaining(role, pageable).map(user -> new UserDto(user.getId(), user.getUserName(), user.getFirstName(), user.getLastName(), null, // Do not expose password
                 user.getEmail(), user.getPhone(), user.getRoles()));
     }
 
-    public void createUser(SignUpDTO signUpDTO) {
+    public void createUser(SignUpDto signUpDTO) {
         User user = new User();
         user.setUserName(signUpDTO.getUserName());
         user.setPassword(passwordEncoder.encode(signUpDTO.getPassword()));
@@ -44,12 +44,12 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void updateUserProfileInfo(UserDTO userDTO, String userName) {
+    public void updateUserProfileInfo(UserDto userDTO, String userName) {
         User user = arrangeUserInfo(userDTO, userName);
         userRepository.save(user);
     }
 
-    public void updateUserInfoWithRole(UserDTO userDTO, String userName) {
+    public void updateUserInfoWithRole(UserDto userDTO, String userName) {
         User user = arrangeUserInfo(userDTO, userName);
         Set<String> roles = user.getRoles();
         if (userDTO.getRoles() != null) {
@@ -59,7 +59,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    private User arrangeUserInfo(UserDTO userDTO, String userName) {
+    private User arrangeUserInfo(UserDto userDTO, String userName) {
         User user = getUserByUserName(userName);
         user.setFirstName(userDTO.getFirstName() != null ? userDTO.getFirstName() : user.getFirstName());
         user.setLastName(userDTO.getLastName() != null ? userDTO.getLastName() : user.getLastName());
@@ -83,9 +83,9 @@ public class UserService {
         userRepository.deleteByUserName(username);
     }
 
-    public UserDTO getUserDTO(String username) {
+    public UserDto getUserDTO(String username) {
         User user = getUserByUserName(username);
-        return new UserDTO(user.getId(), user.getUserName(), user.getFirstName(), user.getLastName(), null, // Do not expose password
+        return new UserDto(user.getId(), user.getUserName(), user.getFirstName(), user.getLastName(), null, // Do not expose password
                 user.getEmail(), user.getPhone(), user.getRoles());
     }
 

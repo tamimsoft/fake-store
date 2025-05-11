@@ -1,6 +1,6 @@
 package com.tamimSoft.store.controller.guest;
 
-import com.tamimSoft.store.dto.ProductDTO;
+import com.tamimSoft.store.dto.ProductDto;
 import com.tamimSoft.store.response.ApiResponse;
 import com.tamimSoft.store.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,21 +28,21 @@ public class ProductController {
 
     @GetMapping()
     @Operation(summary = "Get all products", description = "Allows admin to create a new brand.")
-    public ResponseEntity<ApiResponse<Page<ProductDTO>>> getAllProducts(
+    public ResponseEntity<ApiResponse<Page<ProductDto>>> getAllProducts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false) String categoryId,
             @RequestParam(required = false) String brandId,
             @RequestParam(required = false) Set<String> tagIds
     ) {
-        Page<ProductDTO> productDTOPage = productService.getAllProductDTOs(PageRequest.of(page, size), categoryId, brandId, tagIds);
+        Page<ProductDto> productDTOPage = productService.getAllProductDTOs(PageRequest.of(page, size), categoryId, brandId, tagIds);
         return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Products retrieved successfully", productDTOPage));
     }
 
     @GetMapping("/id")
     @Operation(summary = "Get a product by ID", description = "Retrieve a product by its unique ID.")
-    public ResponseEntity<ApiResponse<ProductDTO>> getProductById(@RequestParam String productId) {
-        ProductDTO productDTO = productService.getProductDTOById(productId);
+    public ResponseEntity<ApiResponse<ProductDto>> getProductById(@RequestParam String productId) {
+        ProductDto productDTO = productService.getProductDTOById(productId);
         return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Product retrieved successfully", productDTO));
     }
 }

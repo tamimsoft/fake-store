@@ -1,6 +1,6 @@
 package com.tamimSoft.store.service;
 
-import com.tamimSoft.store.dto.SlideDTO;
+import com.tamimSoft.store.dto.SlideDto;
 import com.tamimSoft.store.entity.Brand;
 import com.tamimSoft.store.entity.Category;
 import com.tamimSoft.store.entity.Product;
@@ -24,7 +24,7 @@ public class SlideService {
     private final CategoryService categoryService;
     private final BrandService brandService;
 
-    public void createSlide(SlideDTO slideDTO) {
+    public void createSlide(SlideDto slideDTO) {
 
         // Map basic fields using ModelMapper
         Slide slide = modelMapper.map(slideDTO, Slide.class);
@@ -47,7 +47,7 @@ public class SlideService {
         slideRepository.save(slide);
     }
 
-    public Page<SlideDTO> getAllSlideDTOs(Pageable pageable) {
+    public Page<SlideDto> getAllSlideDTOs(Pageable pageable) {
         return slideRepository.findAll(pageable).map(
                 // Convert to DTO
                 this::getSlideDTO
@@ -55,15 +55,15 @@ public class SlideService {
     }
 
 
-    public SlideDTO getSlideDTOById(String slideId) {
+    public SlideDto getSlideDTOById(String slideId) {
         Slide slide = getSlideById(slideId);
         // Convert to DTO
         return getSlideDTO(slide);
 
     }
 
-    private SlideDTO getSlideDTO(Slide slide) {
-        SlideDTO slideDTO = modelMapper.map(slide, SlideDTO.class);
+    private SlideDto getSlideDTO(Slide slide) {
+        SlideDto slideDTO = modelMapper.map(slide, SlideDto.class);
 
         // Manually set IDs instead of full objects
         slideDTO.setProductId(slide.getProduct() != null ? slide.getProduct().getId() : null);
@@ -77,7 +77,7 @@ public class SlideService {
         return slideRepository.findById(slideId).orElseThrow(() -> new ResourceNotFoundException("Slide not found with id: " + slideId));
     }
 
-    public void updateSlide(String slideId, SlideDTO slideDTO) {
+    public void updateSlide(String slideId, SlideDto slideDTO) {
         Slide slide = getSlideById(slideId);
         modelMapper.getConfiguration().setSkipNullEnabled(true); // Prevent overwriting existing values
         modelMapper.map(slideDTO, slide);

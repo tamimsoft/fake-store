@@ -1,6 +1,6 @@
 package com.tamimSoft.store.controller.admin;
 
-import com.tamimSoft.store.dto.CategoryDTO;
+import com.tamimSoft.store.dto.CategoryDto;
 import com.tamimSoft.store.response.ApiResponse;
 import com.tamimSoft.store.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,7 +24,7 @@ public class AdminCategoryController {
 
     @PostMapping()
     @Operation(summary = "Create a category", description = "Allows admin to create a new category.")
-    public ResponseEntity<ApiResponse<Void>> createCategory(@RequestBody CategoryDTO categoryDTO) {
+    public ResponseEntity<ApiResponse<Void>> createCategory(@RequestBody CategoryDto categoryDTO) {
         categoryService.createCategory(categoryDTO);
         log.info("Category created successfully");
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -32,7 +32,7 @@ public class AdminCategoryController {
     }
     @PatchMapping()
     @Operation(summary = "Update a category", description = "Allows admin to update a category.")
-    public ResponseEntity<ApiResponse<Void>> updateCategory(@RequestParam String id, @RequestBody CategoryDTO categoryDTO) {
+    public ResponseEntity<ApiResponse<Void>> updateCategory(@RequestParam String id, @RequestBody CategoryDto categoryDTO) {
         categoryService.updateCategory(id, categoryDTO);
         return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Brand updated successfully", null));
     }

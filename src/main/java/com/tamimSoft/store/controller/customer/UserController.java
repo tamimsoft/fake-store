@@ -1,6 +1,6 @@
 package com.tamimSoft.store.controller.customer;
 
-import com.tamimSoft.store.dto.UserDTO;
+import com.tamimSoft.store.dto.UserDto;
 import com.tamimSoft.store.response.ApiResponse;
 import com.tamimSoft.store.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,14 +29,14 @@ public class UserController {
 
     @GetMapping()
     @Operation(summary = "Get customer details", description = "Retrieve customer details such as first name, last name, email, and phone number.")
-    public ResponseEntity<ApiResponse<UserDTO>> getUser() {
-        UserDTO userDTO = userService.getUserDTO(getAuthenticatedUsername());
+    public ResponseEntity<ApiResponse<UserDto>> getUser() {
+        UserDto userDTO = userService.getUserDTO(getAuthenticatedUsername());
         return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Customer details retrieved successfully", userDTO));
     }
 
     @PatchMapping()
     @Operation(summary = "Update customer details", description = "Update customer details such as first name, last name, password, email, and phone number.")
-    public ResponseEntity<ApiResponse<Void>> updateUser(UserDTO userDTO) {
+    public ResponseEntity<ApiResponse<Void>> updateUser(UserDto userDTO) {
         userService.updateUserProfileInfo(userDTO, getAuthenticatedUsername());
         return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Customer details updated successfully", null));
     }

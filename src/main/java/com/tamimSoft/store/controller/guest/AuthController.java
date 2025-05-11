@@ -1,7 +1,7 @@
 package com.tamimSoft.store.controller.guest;
 
-import com.tamimSoft.store.dto.SignUpDTO;
-import com.tamimSoft.store.dto.TokenDTO;
+import com.tamimSoft.store.dto.SignUpDto;
+import com.tamimSoft.store.dto.TokenDto;
 import com.tamimSoft.store.entity.RefreshToken;
 import com.tamimSoft.store.entity.User;
 import com.tamimSoft.store.exception.InvalidOTPException;
@@ -37,7 +37,7 @@ public class AuthController {
     private final OTPService otpService;
 
     // Temporary storage for pending users
-    private final Map<String, SignUpDTO> pendingUsers = new HashMap<>();
+    private final Map<String, SignUpDto> pendingUsers = new HashMap<>();
 
     private String getUserDetailsUserName(String userName, String password) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userName, password));
@@ -46,7 +46,7 @@ public class AuthController {
 
     @PostMapping("/signup")
     @Operation(summary = "Sign up a new customer", description = "Allows users to sign up for an account.")
-    public ResponseEntity<ApiResponse<Void>> signUp(@RequestBody SignUpDTO signUpDTO) {
+    public ResponseEntity<ApiResponse<Void>> signUp(@RequestBody SignUpDto signUpDTO) {
         User existUser = userService.getUserByUserName(signUpDTO.getUserName());
         if (existUser != null) {
             throw new ResourceNotFoundException("User Already Exists!");
@@ -67,7 +67,7 @@ public class AuthController {
             @RequestParam String email,
             @RequestParam String otp
     ) {
-        SignUpDTO pendingUser = pendingUsers.get(email);
+        SignUpDto pendingUser = pendingUsers.get(email);
         if (pendingUser == null) {
             throw new ResourceNotFoundException("User not found or OTP expired.");
         }
@@ -84,7 +84,7 @@ public class AuthController {
 
     @GetMapping("/login")
     @Operation(summary = "User login", description = "Allows users to log in to their account.")
-    public ResponseEntity<ApiResponse<TokenDTO>> userLogin(
+    public ResponseEntity<ApiResponse<TokenDto>> userLogin(
             @RequestParam String emailOrUserName,
             @RequestParam String password
     ) {
@@ -93,17 +93,17 @@ public class AuthController {
             userName = userService.getUserByEmail(emailOrUserName).getUserName();
         }
         String userDetailsUserName = getUserDetailsUserName(userName, password);
-        TokenDTO tokenDTO = refreshTokenService.generateNewTokens(userDetailsUserName);
+        TokenDto tokenDTO = refreshTokenService.generateNewTokens(userDetailsUserName);
         return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Login Successful", tokenDTO));
     }
 
     @GetMapping("/refresh-token")
     @Operation(summary = "Refresh access token", description = "Refreshes the access token using the refresh token.")
-    public ResponseEntity<ApiResponse<TokenDTO>> refreshAccessToken(@RequestParam String refreshToken) {
+    public ResponseEntity<ApiResponse<TokenDto>> refreshAccessToken(@RequestParam String refreshToken) {
         RefreshToken verifiedToken = refreshTokenService.verifyRefreshToken(refreshToken);
         // Rotate refresh token (delete old, create new)
         refreshTokenService.deleteRefreshToken(verifiedToken);
-        TokenDTO tokenDTO = refreshTokenService.generateNewTokens(verifiedToken.getUser().getUserName());
+        TokenDto tokenDTO = refreshTokenService.generateNewTokens(verifiedToken.getUser().getUserName());
         return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Access token refreshed", tokenDTO));
     }
 }

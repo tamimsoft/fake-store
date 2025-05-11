@@ -18,8 +18,9 @@ public class SwaggerConfig {
     public OpenAPI customSwaggerConfig() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("Fake Store API")
+                        .title("Store API")
                         .description("Created by Tamim Hasan")
+                        .summary("a product ot tamimSoft")
                         .version("1.0")
                 )
                 .servers(List.of(

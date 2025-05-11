@@ -8,25 +8,29 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class ProductDTO {
+public class ProductDto {
     @Hidden
     private String id;
     private String name;
     private String description;
     @Nullable
-    private double price;
+    private BigDecimal regularPrice;
     @Nullable
-    private double discount;
+    private BigDecimal currentPrice;
+    private int discountPercentage;
+    private int totalReviews;
+    private double averageRating;
+    private int quantity;
     private Set<String> colors;
     private Set<String> sizes;
     private String material;
-    private Integer stock;
     private Set<String> imageUrls;
     private String brandId;
     private String categoryId;

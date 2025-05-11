@@ -1,6 +1,6 @@
 package com.tamimSoft.store.service;
 
-import com.tamimSoft.store.dto.BrandDTO;
+import com.tamimSoft.store.dto.BrandDto;
 import com.tamimSoft.store.entity.Brand;
 import com.tamimSoft.store.entity.Category;
 import com.tamimSoft.store.exception.ResourceNotFoundException;
@@ -20,7 +20,7 @@ public class BrandService {
     private final CategoryService categoryService;
 
 
-    public void createBrand(BrandDTO brandDTO) {
+    public void createBrand(BrandDto brandDTO) {
         Brand brand = new Brand();
         brand.setName(brandDTO.getName());
         brand.setDescription(brandDTO.getDescription());
@@ -33,9 +33,9 @@ public class BrandService {
         brandRepository.save(brand);
     }
 
-    public Page<BrandDTO> getAllBrandDTOs(Pageable pageable) {
+    public Page<BrandDto> getAllBrandDTOs(Pageable pageable) {
         return brandRepository.findAll(pageable).map(
-                brand -> new BrandDTO(
+                brand -> new BrandDto(
                         brand.getId(),
                         brand.getName(),
                         brand.getDescription(),
@@ -48,9 +48,9 @@ public class BrandService {
         );
     }
 
-    public BrandDTO getBrandDTOById(String brandId) {
+    public BrandDto getBrandDTOById(String brandId) {
         return brandRepository.findById(brandId).map(
-                        brand -> new BrandDTO(
+                        brand -> new BrandDto(
                                 brand.getId(),
                                 brand.getName(),
                                 brand.getDescription(),
@@ -69,7 +69,7 @@ public class BrandService {
                 .orElseThrow(() -> new ResourceNotFoundException("Brand not found with id: " + brandId));
     }
 
-    public void updateBrand(String brandId, BrandDTO brandDTO) {
+    public void updateBrand(String brandId, BrandDto brandDTO) {
         Brand brand = brandRepository.findById(brandId)
                 .orElseThrow(() -> new ResourceNotFoundException("Brand not found with id: " + brandId));
 

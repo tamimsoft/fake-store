@@ -11,6 +11,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -29,16 +30,20 @@ public class Product {
     private String slug;
     @NonNull
     private String description;
-    private double price;
-    private double discount;
+
+    private BigDecimal regularPrice = BigDecimal.ZERO;
+    private BigDecimal currentPrice;
+    private int discountPercentage; // If it's a percentage
+    private int quantity = 1;
+
+    private double averageRating = 0.0; // Updated when a new review is added
+    private int totalReviews = 0; // Count of reviews
     @NonNull
     private Set<String> colors;
 
     private Set<String> sizes = new HashSet<>();
     @NonNull
     private String material;
-    @NonNull
-    private Integer stock = 1;
     @NonNull
     private Set<String> imageUrls;
 
@@ -52,11 +57,11 @@ public class Product {
 
     @DBRef
     @NonNull
-    private Set<ProductTag> tags;
+    private Set<Tag> tags;
 
     @CreatedDate
     private LocalDateTime createdAt;
 
     @LastModifiedDate
-    private LocalDateTime updateAt;
+    private LocalDateTime updatedAt;
 }

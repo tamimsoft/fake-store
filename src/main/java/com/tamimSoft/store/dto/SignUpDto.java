@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class AddToCartDTO {
-    private String productId;
-    private int quantity;
-    private String color;
-    private String size;
+public class SignUpDto {
+    private String userName;
+    private String password;
+    private String email;
+    private String phone;
 }

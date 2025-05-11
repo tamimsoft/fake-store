@@ -1,7 +1,7 @@
 package com.tamimSoft.store.service;
 
 
-import com.tamimSoft.store.dto.TokenDTO;
+import com.tamimSoft.store.dto.TokenDto;
 import com.tamimSoft.store.entity.RefreshToken;
 import com.tamimSoft.store.entity.User;
 import com.tamimSoft.store.exception.InvalidTokenException;
@@ -24,8 +24,8 @@ public class RefreshTokenService {
 
     private final UserService userService;
 
-    public TokenDTO generateNewTokens(String userName) {
-        TokenDTO tokenDTO = new TokenDTO();
+    public TokenDto generateNewTokens(String userName) {
+        TokenDto tokenDTO = new TokenDto();
         tokenDTO.setAccessToken(jwtUtil.generateToken(userName));
         tokenDTO.setRefreshToken(generateRefreshToken(userName).getToken());
         return tokenDTO;

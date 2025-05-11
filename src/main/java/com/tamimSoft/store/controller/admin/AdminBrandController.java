@@ -1,6 +1,6 @@
 package com.tamimSoft.store.controller.admin;
 
-import com.tamimSoft.store.dto.BrandDTO;
+import com.tamimSoft.store.dto.BrandDto;
 import com.tamimSoft.store.entity.Category;
 import com.tamimSoft.store.response.ApiResponse;
 import com.tamimSoft.store.service.BrandService;
@@ -31,7 +31,7 @@ public class AdminBrandController {
 
     @PostMapping()
     @Operation(summary = "Create a brand", description = "Allows admin to create a new brand.")
-    public ResponseEntity<ApiResponse<Void>> createBrand(@RequestBody BrandDTO brandDTO) {
+    public ResponseEntity<ApiResponse<Void>> createBrand(@RequestBody BrandDto brandDTO) {
         if (brandDTO.getCategoryIds() == null || brandDTO.getCategoryIds().isEmpty()) {
             return ResponseEntity.badRequest()
                     .body(new ApiResponse<>(HttpStatus.BAD_REQUEST, "Category IDs cannot be empty", null));
@@ -57,7 +57,7 @@ public class AdminBrandController {
 
     @PatchMapping()
     @Operation(summary = "Update a brand", description = "Allows admin to update a brand.")
-    public ResponseEntity<ApiResponse<Void>> updateBrand(@RequestParam String id, @RequestBody BrandDTO brandDTO) {
+    public ResponseEntity<ApiResponse<Void>> updateBrand(@RequestParam String id, @RequestBody BrandDto brandDTO) {
         brandService.updateBrand(id, brandDTO);
         return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Brand updated successfully", null));
     }
