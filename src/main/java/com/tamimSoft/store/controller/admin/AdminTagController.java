@@ -1,8 +1,8 @@
 package com.tamimSoft.store.controller.admin;
 
-import com.tamimSoft.store.dto.ProductTagDto;
+import com.tamimSoft.store.dto.TagDto;
 import com.tamimSoft.store.response.ApiResponse;
-import com.tamimSoft.store.service.ProductTagService;
+import com.tamimSoft.store.service.TagService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -22,22 +22,22 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Admin APIs", description = "Admin-only operations")
 public class AdminTagController {
 
-    private final ProductTagService tagService;
+    private final TagService tagService;
 
     @GetMapping()
     @Operation(summary = "Get all tags", description = "Retrieve a list of all tags.")
-    public ResponseEntity<ApiResponse<Page<ProductTagDto>>> getAllTags(
+    public ResponseEntity<ApiResponse<Page<TagDto>>> getAllTags(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        Page<ProductTagDto> allTagDTOs = tagService.getAllTagDTOs(PageRequest.of(page, size));
+        Page<TagDto> allTagDTOs = tagService.getAllTagsDto(PageRequest.of(page, size));
         return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Tags retrieved successfully", allTagDTOs));
     }
 
     @PostMapping()
     @Operation(summary = "Create a tag", description = "Allows admin to create a new product tag.")
-    public ResponseEntity<ApiResponse<Void>> createTag(@RequestBody ProductTagDto productTagDTO) {
-        tagService.createTag(productTagDTO);
+    public ResponseEntity<ApiResponse<Void>> createTag(@RequestBody TagDto tagDto) {
+        tagService.createTag(tagDto);
         log.info("Tag created successfully");
 
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -47,8 +47,8 @@ public class AdminTagController {
 
     @PatchMapping()
     @Operation(summary = "Update a product tag", description = "Allows admin to update a product tag.")
-    public ResponseEntity<ApiResponse<Void>> updateTag(@RequestParam String id, @RequestBody ProductTagDto productTagDTO) {
-        tagService.updateTag(id, productTagDTO);
+    public ResponseEntity<ApiResponse<Void>> updateTag(@RequestParam String id, @RequestBody TagDto tagDto) {
+        tagService.updateTag(id, tagDto);
         return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK, "Tag updated successfully", null));
     }
 
@@ -56,7 +56,7 @@ public class AdminTagController {
     @DeleteMapping()
     @Operation(summary = "Delete a Tag", description = "Allows admin to delete a Tag.")
     public ResponseEntity<Void> deleteTag(@RequestParam String tagId) {
-        tagService.deleteTagById(tagId);
+        tagService.deleteById(tagId);
         return ResponseEntity.noContent().build();
     }
 }

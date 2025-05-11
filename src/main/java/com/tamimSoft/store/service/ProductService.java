@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class ProductService {
     final private BrandService brandService;
     final private CategoryService categoryService;
-    final private ProductTagService productTagService;
+    final private TagService tagService;
     final private UserService userService;
 
     final private ProductRepository productRepository;
@@ -55,7 +55,7 @@ public class ProductService {
 
         if (productDTO.getTagIds() != null) {
             for (String tagId : productDTO.getTagIds()) {
-                tags.add(productTagService.getTagById(tagId));
+                tags.add(tagService.getTagById(tagId));
             }
         }
         if (productDTO.getBrandId() != null) {
@@ -95,7 +95,7 @@ public class ProductService {
 
         if (productDTO.getTagIds() != null) {
             for (String tagId : productDTO.getTagIds()) {
-                tags.add(productTagService.getTagById(tagId));
+                tags.add(tagService.getTagById(tagId));
             }
         }
         Product product = getProductById(id);
