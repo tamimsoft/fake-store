@@ -25,7 +25,7 @@ public class SwaggerConfig {
                 )
                 .servers(List.of(
                         new Server().url("http://localhost:8080").description("Local Server"),
-                        new Server().url("https://insightful-eagerness-production.up.railway.app").description("Production Server")
+                        new Server().url("https://fake-store-xq1t.onrender.com").description("Production Server")
                 ))
                 .components(new Components()
                         .addSecuritySchemes("bearerAuth",
