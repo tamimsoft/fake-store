@@ -71,6 +71,9 @@ public class UserService {
     public User getUserByUserName(String username) {
         return userRepository.findByUserName(username).orElseThrow(() -> new ResourceNotFoundException("User not found with customer name: " + username));
     }
+    public boolean isUserExist(String username) {
+        return userRepository.findByUserName(username).isPresent();
+    }
 
     public User getUserByEmail(String email) {
         return userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User not found with customer email: " + email));

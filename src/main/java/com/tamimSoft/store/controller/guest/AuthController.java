@@ -47,8 +47,8 @@ public class AuthController {
     @PostMapping("/signup")
     @Operation(summary = "Sign up a new customer", description = "Allows users to sign up for an account.")
     public ResponseEntity<ApiResponse<Void>> signUp(@RequestBody SignUpDto signUpDTO) {
-        User existUser = userService.getUserByUserName(signUpDTO.getUserName());
-        if (existUser != null) {
+        boolean isUserExist = userService.isUserExist(signUpDTO.getUserName());
+        if (isUserExist) {
             throw new ResourceNotFoundException("User Already Exists!");
         }
         // Generate OTP
