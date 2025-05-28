@@ -7,10 +7,10 @@ spring:
       username: root
       password: 123
 server:
-  port: 8080
+  port: ${PORT:8080}
 
-logging:
-  level:
-    root: INFO
-    org.springframework.web: DEBUG
-    org.springframework.data.mongodb: DEBUG
+#logging:
+#  level:
+#    root: INFO
+#    org.springframework.web: DEBUG
+#    org.springframework.data.mongodb: DEBUG
