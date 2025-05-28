@@ -26,7 +26,8 @@ public class SwaggerConfig {
                         .version("1.0")
                 )
                 .servers(List.of(
-                        new Server().url("https://fake-store-production.up.railway.app").description("Production Server"),
+                        new Server().url("https://fake-store-xq1t.onrender.com").description("Production on Render"),
+                        new Server().url("https://fake-store-production.up.railway.app").description("Production Railway"),
                         new Server().url("http://localhost:8080").description("Local Server")
                 ))
                 .components(new Components()
