@@ -2,6 +2,7 @@ package com.tamimSoft.store.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
@@ -20,6 +21,7 @@ public class SwaggerConfig {
                 .info(new Info()
                         .title("Store API")
                         .description("Created by Tamim Hasan")
+                        .contact(new Contact().name("Tamim Hasan").email("tamim@example.com"))
                         .summary("a product ot tamimSoft")
                         .version("1.0")
                 )
